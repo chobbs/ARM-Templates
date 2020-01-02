@@ -2,24 +2,6 @@
   "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
   "contentVersion": "1.0.0.0",
   "parameters": {
-    "esVersion": {
-      "type": "string",
-      "defaultValue": "2.0.0",
-      "allowedValues": [
-        "2.0.0",
-        "2.0.1"
-      ],
-      "metadata": {
-        "description": "Elasticsearch version to install"
-      }
-    },
-    "esClusterName": {
-      "type": "string",
-      "defaultValue": "elasticsearch",
-      "metadata": {
-        "description": "The name of the Elasticsearch cluster"
-      }
-    },
     "loadBalancerType": {
       "type": "string",
       "defaultValue": "external",
@@ -73,7 +55,7 @@
         "description": "Make all datanodes master eligible, this can be useful for small elasticsearch cluster deploys"
       }
     },
-    "vmSizeMasterNodes": {
+    "vmSizeMetaNodes": {
       "type": "string",
       "defaultValue": "Standard_A1",
       "allowedValues": [
@@ -94,7 +76,7 @@
         "Standard_DS13"
       ],
       "metadata": {
-        "description": "Size of the InfluxEnterprise master nodes, if data nodes are not master eligible 3 of these will be provisioned"
+        "description": "Size of the InfluxEnterprise meta nodes, 3 of these will be provisioned"
       }
     },
       "vmClientNodeCount": {
@@ -147,16 +129,12 @@
   "variables": {
     "templateBaseUrl": "https://raw.githubusercontent.com/chobbs/ARM-Templates/master/src/",
     "sharedTemplateUrl": "[concat(variables('templateBaseUrl'), '/partials/shared-resources.json')]",
-    "masterTemplates": {
-      "No": "machines/master-nodes-resources.json",
-      "Yes": "empty/empty-master-nodes-resources.json"
+    "metaTemplates": {
+      "No": "machines/meta-nodes-resources.json",
+      "Yes": "empty/empty-meta-nodes-resources.json"
     },
     "clientPre": "[split(string(parameters('vmClientNodeCount')), '')[0]]",
-    "masterTemplateUrl": "[concat(variables('templateBaseUrl'), variables('masterTemplates')[parameters('dataNodesAreMasterEligible')])]",
-    "esSettings": {
-      "clusterName": "[parameters('esClusterName')]",
-      "version": "[parameters('esVersion')]"
-    },
+    "metaTemplateUrl": "[concat(variables('templateBaseUrl'), variables('metaTemplates')[parameters('dataNodesAreMasterEligible')])]",
     "dataNodeShortOpts": {
       "No": "z",
       "Yes": ""
@@ -172,7 +150,7 @@
       "Yes": "l"
     },
     "installPluginsShortOpt": "[variables('installPluginsShortOpts')]",
-    "commonInstallParams": "[concat(variables('esSettings').clusterName, ' -v ', variables('esSettings').version, ' -A ', parameters('vmDataNodeCount'))]",
+    "commonInstallParams": "[parameters('vmDataNodeCount')]",
     "ubuntuScripts": [
       "[concat(variables('templateBaseUrl'), 'scripts/elasticsearch-ubuntu-install.sh')]",
       "https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/shared_scripts/ubuntu/vm-disk-utils-0.1.sh"
@@ -187,7 +165,7 @@
       },
       "managementPort": "22",
       "extentionSettings": {
-        "master": {
+        "meta": {
           "publisher": "Microsoft.OSTCExtensions",
           "type": "CustomScriptForLinux",
           "typeHandlerVersion": "1.2",
@@ -223,12 +201,12 @@
     "location": "[variables('locationMap')[parameters('location')]]",
     "storageAccountPrefix": "influxdb",
     "storageAccountNameShared": "[concat(variables('storageAccountPrefix'), 's', uniqueString(resourceGroup().id, deployment().name))]",
-    "masterNodesIpPrefix": "10.0.0.1",
+    "metaNodesIpPrefix": "10.0.0.1",
     "networkSettings": {
       "virtualNetworkName": "[parameters('virtualNetworkName')]",
       "addressPrefix": "10.0.0.0/16",
       "subnet": {
-        "master": {
+        "meta": {
           "name": "meta",
           "prefix": "10.0.0.0/24",
           "vnet": "[parameters('virtualNetworkName')]"
@@ -391,7 +369,7 @@
   },
   "resources": [
     {
-      "name": "master-nodes",
+      "name": "meta-nodes",
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2015-01-01",
       "dependsOn": [
@@ -400,7 +378,7 @@
       "properties": {
         "mode": "Incremental",
         "templateLink": {
-          "uri": "[variables('masterTemplateUrl')]",
+          "uri": "[variables('metaTemplateUrl')]",
           "contentVersion": "1.0.0.0"
         },
         "parameters": {
@@ -413,17 +391,17 @@
           "password": {
             "value": "[parameters('password')]"
           },
-          "masterNodesIpPrefix": {
-            "value": "[variables('masterNodesIpPrefix')]"
+          "metaNodesIpPrefix": {
+            "value": "[variables('metaNodesIpPrefix')]"
           },
           "location": {
             "value": "[variables('location')]"
           },
           "vmSize": {
-            "value": "[parameters('vmSizeMasterNodes')]"
+            "value": "[parameters('vmSizeMetaNodes')]"
           },
           "subnet": {
-            "value": "[variables('networkSettings').subnet.master]"
+            "value": "[variables('networkSettings').subnet.meta]"
           },
           "osSettings": {
             "value": "[variables('osSettings')]"
