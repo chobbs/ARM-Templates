@@ -81,25 +81,29 @@
     {
       "type": "Microsoft.Storage/storageAccounts",
       "name": "[concat(variables('storageAccountName'), copyindex(1))]",
-      "apiVersion": "2015-05-01-preview",
+      "apiVersion": "2018-07-01",
       "location": "[parameters('location')]",
       "copy": {
         "name": "[concat(parameters('namespace'),'storageLoop')]",
         "count": "[parameters('storageSettings').count]"
       },
-      "properties": {
-        "accountType": "[parameters('storageSettings').accountType]"
-      }
+      "sku": {
+        "name": "[parameters('storageSettings').accountType]"
+      },
+      "kind": "StorageV2"
     },
     {
-      "apiVersion": "2015-06-15",
+      "apiVersion": "2019-03-01",
       "type": "Microsoft.Compute/availabilitySets",
       "name": "[concat(parameters('namespace'), '-set')]",
       "location": "[parameters('location')]",
       "properties": {
         "platformUpdateDomainCount": 20,
         "platformFaultDomainCount": 3
-      }
+      },
+      "sku": {
+        "name": "Aligned"
+    }
     },
     {
       "apiVersion": "2015-06-15",

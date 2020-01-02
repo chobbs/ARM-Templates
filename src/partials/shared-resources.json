@@ -69,9 +69,10 @@
       "name": "[parameters('storageAccountName')]",
       "apiVersion": "2015-05-01-preview",
       "location": "[parameters('location')]",
-      "properties": {
-        "accountType": "Standard_LRS"
-      }
+      "sku": {
+        "name": "Standard_LRS"
+      },
+      "kind": "StorageV2"
     },
     {
       "apiVersion": "2015-06-15",
