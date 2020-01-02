@@ -76,8 +76,6 @@
     "templateBaseUrl": "https://raw.githubusercontent.com/chobbs/ARM-Templates/master/src/",
     "subnetRef": "[concat(resourceId('Microsoft.Network/virtualNetworks', parameters('subnet').vnet), '/subnets/', parameters('subnet').name)]",
     "storageAccountName": "[concat(parameters('storageSettings').prefix)]",
-    "vmStorageAccountType": "Premium_LRS",
-    "vmName": "[concat(parameters('namespace'), 'vm')]"
   },
   "resources": [
     {
@@ -191,7 +189,7 @@
           "osDisk": {
           "createOption": "FromImage",
           "managedDisk": {
-            "storageAccountType": "[variables('vmStorageAccountType')]"
+            "storageAccountType": "[parameters('storageSettings').accountType]"
           },
             "osType": "Linux"
           }
