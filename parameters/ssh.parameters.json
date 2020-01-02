@@ -1,0 +1,18 @@
+{
+	"esVersion":{"value":"2.0.0"},
+	"esClusterName":{"value":"Elastic12"},
+	"loadBalancerType":{"value":"internal"},
+	"kibana":{"value":"Yes"},
+	"jumpbox":{"value":"No"},
+	"vmSizeDataNodes":{"value":"Standard_D1"},
+	"vmDataNodeCount":{"value":3},
+	"dataNodesAreMasterEligible":{"value":"Yes"},
+	"vmSizeMasterNodes":{"value":"Standard_D1"},
+	"vmSizeClientNodes":{"value":"Standard_D1"},
+	"password":{"value":{"password":null,"sshPublicKey":"ssh-rsa <redacted>","authenticationType":"sshPublicKey"}},
+	"adminUsername":{"value":"mpdreamz"},
+	"shieldAdminPassword":{"value":"Elastic12"},
+	"shieldReadPassword":{"value":"Elastic12"},
+	"shieldKibanaPassword":{"value":"Elastic12"},
+	"location":{"value":"westus"}
+}
