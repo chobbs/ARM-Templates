@@ -158,9 +158,9 @@
       "name": "[concat(parameters('namespace'), 'vm', copyindex())]",
       "location": "[parameters('location')]",
       "plan": {
-      "name": "influxdb-enterprise-data-byol",
-      "product": "influxdb-enterprise-vm",
-      "publisher": "influxdata"
+        "name": "influxdb-enterprise-data-byol",
+        "product": "influxdb-enterprise-vm",
+        "publisher": "influxdata"
       },
       "copy": {
         "name": "[concat(parameters('namespace'), 'virtualMachineLoop')]",
@@ -181,10 +181,10 @@
         "osProfile": "[reference(concat('Microsoft.Resources/deployments/osProfileData', copyindex()), '2015-01-01').outputs.osProfile.value]",
         "storageProfile": {
           "imageReference": {
-          "publisher": "influxdata",
-          "offer": "influxdb-enterprise-vm",
-          "sku": "influxdb-enterprise-meta-byol",
-          "version": "latest"
+            "publisher": "influxdata",
+            "offer": "influxdb-enterprise-vm",
+            "sku": "influxdb-enterprise-meta-byol",
+            "version": "latest"
           },
           "osDisk": {
           "createOption": "FromImage",

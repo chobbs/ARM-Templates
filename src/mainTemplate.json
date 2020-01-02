@@ -221,7 +221,7 @@
       "northeurope": "[parameters('location')]"
     },
     "location": "[variables('locationMap')[parameters('location')]]",
-    "storageAccountPrefix": "elastic",
+    "storageAccountPrefix": "influxdb",
     "storageAccountNameShared": "[concat(variables('storageAccountPrefix'), 's', uniqueString(resourceGroup().id, deployment().name))]",
     "masterNodesIpPrefix": "10.0.0.1",
     "networkSettings": {
