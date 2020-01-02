@@ -145,7 +145,7 @@
     }
   },
   "variables": {
-    "templateBaseUrl": "https://raw.githubusercontent.com/Mpdreamz/ARM-Templates/master/src/",
+    "templateBaseUrl": "https://raw.githubusercontent.com/chobbs/ARM-Templates/master/src/",
     "sharedTemplateUrl": "[concat(variables('templateBaseUrl'), '/partials/shared-resources.json')]",
     "masterTemplates": {
       "No": "machines/master-nodes-resources.json",

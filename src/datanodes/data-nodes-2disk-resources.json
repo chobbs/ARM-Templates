@@ -73,7 +73,7 @@
     }
   },
   "variables": {
-    "templateBaseUrl": "https://raw.githubusercontent.com/Mpdreamz/ARM-Templates/master/src/",
+    "templateBaseUrl": "https://raw.githubusercontent.com/chobbs/ARM-Templates/master/src/",
     "subnetRef": "[concat(resourceId('Microsoft.Network/virtualNetworks', parameters('subnet').vnet), '/subnets/', parameters('subnet').name)]",
     "storageAccountName": "[concat(parameters('storageSettings').prefix)]",
     "vmStorageAccountType": "Premium_LRS",

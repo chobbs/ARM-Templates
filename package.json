@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/Mpdreamz/ARM-Templates.git"
+    "url": "git://github.com/chobbs/ARM-Templates.git"
   },
   "keywords": [
     "azure",
@@ -19,9 +19,9 @@
   "author": "Elastic",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/Mpdreamz/ARM-Templates/issues"
+    "url": "https://github.com/chobbs/ARM-Templates/issues"
   },
-  "homepage": "https://github.com/Mpdreamz/ARM-Templates",
+  "homepage": "https://github.com/chobbc/ARM-Templates",
   "devDependencies": {
     "gulp": "^3.9.0",
     "eclint": "^1.1.5",

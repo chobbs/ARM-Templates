@@ -10,7 +10,7 @@
 	"vmSizeMasterNodes":{"value":"Standard_D1"},
 	"vmSizeClientNodes":{"value":"Standard_D1"},
 	"password":{"value":{"password":null,"sshPublicKey":"ssh-rsa <redacted>","authenticationType":"sshPublicKey"}},
-	"adminUsername":{"value":"mpdreamz"},
+	"adminUsername":{"value":"chobbs"},
 	"shieldAdminPassword":{"value":"Elastic12"},
 	"shieldReadPassword":{"value":"Elastic12"},
 	"shieldKibanaPassword":{"value":"Elastic12"},
