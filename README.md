@@ -21,28 +21,28 @@ This repository consists of:
 first make sure you are logged into azure
 
 ```shell
-$ azure login
+$ az login
 ```
 
-Then make sure you are in arm mode
+Then make sure you are in Incremental mode
 
 ```shell
-$ azure config mode arm
+$ az config mode Incremental
 ```
 
-Then create a resource group `<name>` in a `<location>` (e.g `westeurope`) where we can deploy too
+Then create a resource group `<name>` in a `<location>` (e.g `centralus`) where we can deploy too
 
 ```shell
-$ azure group create <name> <location>
+$ az group create <name> <location>
 ```
 
 Next we can either use our published template directly using `--template-uri`
 
-> $ azure group deployment create --template-uri https://raw.githubusercontent.com/Mpdreamz/ARM-Templates/master/src/mainTemplate.json --parameters-file parameters/password.parameters.json -g <name>
+> $ az group deployment create --template-uri https://raw.githubusercontent.com/chobbs/ARM-Templates/master/src/mainTemplate.json --parameters-file parameters/password.parameters.json
 
 or if your are executing commands from a clone of this repo using `--template-file`
 
-> $ azure group deployment create --template-file src/mainTemplate.json --parameters-file parameters/password.parameters.json -g <name>
+> $ az group deployment create --template-file src/mainTemplate.json --parameters-file parameters/password.parameters.json
 
 `<name>` in these last two examples refers to the resource group you just created.
 
