@@ -1,4 +1,4 @@
-# Elasticsearch Azure Marketplace offering
+# InfluxEnterpise Azure Marketplace offering
 
 This repository consists of:
 
