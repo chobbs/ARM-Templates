@@ -126,7 +126,7 @@
         ],
         "loadBalancingRules": [
           {
-            "name": "influx",
+            "name": "es",
             "properties": {
               "frontendIPConfiguration": {
                 "id": "[concat(resourceId('Microsoft.Network/loadBalancers','loadBalancer'),'/frontendIPConfigurations/LBFE')]"
