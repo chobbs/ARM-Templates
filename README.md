@@ -1,112 +1,20 @@
 # InfluxEnterpise Azure Marketplace offering
 
+__Note: These templates are still under active development. They are not recommended for production.__
+
+## Publishing a new image
+
+### Generate a SAS
+
+A Shared Access Signature (SAS) URL is required by the Partner Portal to import a VHD ([official guide](https://docs.microsoft.com/en-us/azure/marketplace/cloud-partner-portal/virtual-machine/cpp-get-sas-uri)).
+Packer is used to build the images and will only create managed disks.
+In order to create the SAS URL, the underlying VHD of the managed disk needs to be extracted and put in a storage account.
+The  script that handles the steps in [this guide](https://docs.microsoft.com/en-us/azure/virtual-machines/scripts/virtual-machines-linux-cli-sample-copy-managed-disks-vhd) provides instructions on how to extract the VHD and create the SAS URL.
+
 This repository consists of:
 
 * [src/mainTemplate.json](src/mainTemplate.json) - Entry Azure Resource Management (ARM) template.
 * [src/createUiDefinition](src/createUiDefinition.json) - UI definition file for our market place offering. This file produces an output JSON that the ARM template can accept as input parameters JSON.
-
-## Building
-
-After pulling call `npm install` once, this will pull in all devDependencies.
-
-You may edit [src/allowedValues.json](src/allowedValues.json) the build will use these to patch the arm template and ui definition.
-
-Run `npm run build`, this will validate EditorConfig settings, validate JSON files, patch the allowedValues and then create a zip in the `dist` folder.
-
-## Marketplace
-
-The market place Elasticsearch offering offers a simplified UI over the full power of the ARM template. It will always install a cluster complete with the elasticsearch plugins Shield, Watcher & Marvel.
-
-![Example UI Flow](images/ui.gif)
-
-TODO gif that shows how to find us on the real azure market place.
-
-You can view the UI in developer mode by [clicking here](https://portal.azure.com/#blade/Microsoft_Azure_Compute/CreateMultiVmWizardBlade/internal_bladeCallId/anything/internal_bladeCallerParams/{"initialData":{},"providerConfig":{"createUiDefinition":"https%3A%2F%2Fraw.githubusercontent.com%2FMpdreamz%2FARM-Templates%2Fmaster%2Fsrc%2FcreateUiDefinition.json"}}). If you feel something is cached improperly use [this client unoptimized link instead](https://portal.azure.com/?clientOptimizations=false#blade/Microsoft_Azure_Compute/CreateMultiVmWizardBlade/internal_bladeCallId/anything/internal_bladeCallerParams/{"initialData":{},"providerConfig":{"createUiDefinition":"https%3A%2F%2Fraw.githubusercontent.com%2FMpdreamz%2FARM-Templates%2Fmaster%2Fsrc%2FcreateUiDefinition.json"}})
-
-## ARM template
-
-The output from the market place UI is fed directly to the ARM template. You can use the ARM template on its own without going through the market place.
-
-### Parameters
-
-<table>
-  <tr><th>Parameter</td><th>Type</th><th>Description</th></tr>
-  <tr><td>esVersion</td><td>enum</td>
-    <td>A valid supported Elasticsearch version see <a href="https://github.com/Mpdreamz/ARM-Templates/blob/master/src/mainTemplate.json#L8">this list for supported versions</a>
-    </td></tr>
-  <tr><td>esClusterName</td><td>string</td>
-    <td> The name of the Elasticsearch cluster
-    </td></tr>
-
-  <tr><td>loadBalancerType</td><td>string</td>
-    <td>Whether the loadbalancer should be <code>internal</code> or <code>external</code>
-    If you run <code>external</code> you should also install the shield plugin and look into setting up SSL on your endpoint
-    </td></tr>
-
-  <tr><td>esPlugins</td><td>string</td>
-    <td>Either <code>Yes</code> or <code>No</code> whether to install the elasticsearch suite of
-    plugins (Shield, Watcher, Marvel)
-    </td></tr>
-
-  <tr><td>kibana</td><td>string</td>
-    <td>Either <code>Yes</code> or <code>No</code> provision an extra machine with a public IP that
-    has Kibana installed on it. If you have opted to also install the Elasticsearch plugins using <code>esPlugins</code> then the Marvel and Sense Kibana apps get installed as well.
-    </td></tr>
-
-  <tr><td>jumpbox</td><td>string</td>
-    <td>Either <code>Yes</code> or <code>No</code> Optionally add a virtual machine to the deployment which you can use to connect and manage virtual machines on the internal network.
-    </td></tr>
-
-  <tr><td>vmSizeDataNodes</td><td>string</td>
-    <td>Azure VM size of the data nodes see <a href="https://github.com/Mpdreamz/ARM-Templates/blob/master/src/mainTemplate.json#L69">this list for supported sizes</a>
-    </td></tr>
-
-  <tr><td>vmDataNodeCount</td><td>int</td>
-    <td>The number of data nodes you wish to deploy. Should be greater than 0.
-    </td></tr>
-
-  <tr><td>dataNodesAreMasterEligible</td><td>string</td>
-    <td>Either <code>Yes</code> or <code>No</code> Make all data nodes master eligible, this can be useful for small Elasticsearch clusters. When <code>Yes</code> no dedicated master nodes will be provisioned
-    </td></tr>
-
-  <tr><td>vmSizeMasterNodes</td><td>string</td>
-    <td>Azure VM size of the master nodes see <a href="https://github.com/Mpdreamz/ARM-Templates/blob/master/src/mainTemplate.json#L69">this list for supported sizes</a>. By default the template deploys 3 dedicated master nodes, unless <code>dataNodesAreMasterEligible</code> is set to <code>Yes</code>
-    </td></tr>
-
-  <tr><td>vmClientNodeCount</td><td>int</td>
-    <td> The number of client nodes to provision. Defaults 0 and can be any positive integer. By default the data nodes are directly exposed on the loadbalancer. If you provision client nodes, only these will be added to the loadbalancer.
-    </td></tr>
-
-  <tr><td>vmSizeClientNodes</td><td>string</td>
-    <td> Azure VM size of the client nodes see <a href="https://github.com/Mpdreamz/ARM-Templates/blob/master/src/mainTemplate.json#L69">this list for supported sizes</a>.
-    </td></tr>
-
-  <tr><td>adminUsername</td><td>string</td>
-    <td>Admin username used when provisioning virtual machines
-    </td></tr>
-
-  <tr><td>password</td><td>object</td>
-    <td>Password is a complex object parameter, we support both authenticating through username/pass or ssh keys. See the <a href="https://github.com/Mpdreamz/ARM-Templates/tree/master/parameters"> parameters example folder</a> for an example of what to pass for either option.
-    </td></tr>
-
-  <tr><td>shieldAdminPassword</td><td>securestring</td>
-    <td>Shield password for the <code>es_admin</code> user with admin role, must be &gt; 6 characters
-    </td></tr>
-
-  <tr><td>shieldReadPassword</td><td>securestring</td>
-    <td>Shield password for the <code>es_read</code> user with user (read-only) role, must be &gt; 6 characters
-    </td></tr>
-
-  <tr><td>shieldKibanaPassword</td><td>securestring</td>
-    <td>Shield password for the <code>es_kibana</code> user with kibana4 role, must be &gt; 6 characters
-    </td></tr>
-
-  <tr><td>location</td><td>string</td>
-    <td>The location where to provision all the items in this template. Defaults to the special <code>ResourceGroup</code> value which means it will inherit the location
-    from the resource group see <a href="https://github.com/Mpdreamz/ARM-Templates/blob/master/src/mainTemplate.json#L197">this list for supported locations</a>.
-    </td></tr>
-
-</table>
 
 ### Command line deploy
 
