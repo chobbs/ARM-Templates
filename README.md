@@ -1,4 +1,4 @@
-# InfluxEnterpise Azure Marketplace offering
+# InfluxEnterprise Azure Marketplace offering
 
 __Note: These templates are still under active development. They are not recommended for production.__
 
