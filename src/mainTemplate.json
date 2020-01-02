@@ -496,7 +496,7 @@
             "value": "[parameters('vmDataNodeCount')]"
           },
           "namespace": {
-            "value": "datanode"
+            "value": "influx-datanode"
           },
           "osSettings": {
             "value": "[variables('osSettings')]"
