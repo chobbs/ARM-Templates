@@ -155,7 +155,6 @@
       "No": "empty/empty-resources.json",
       "Yes": "machines/kibana-resources.json"
     },
-    
     "dataNodeShortOpts": {
       "No": "z",
       "Yes": ""
