@@ -1,8 +1,4 @@
 {
-  "versions": [
-    "2.0.0",
-    "2.0.1"
-  ],
   "vmSizes": [
     "Standard_A0",
     "Standard_A1",
