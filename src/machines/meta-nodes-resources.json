@@ -14,6 +14,12 @@
         "description": "Admin password used when provisioning virtual machines"
       }
     },
+    "storageSettings": {
+      "type": "object",
+      "metadata": {
+        "description": "Storage Account Settings"
+      }
+    },
     "storageAccountName": {
       "type": "string",
       "metadata": {
@@ -122,10 +128,15 @@
       }
     },
     {
-      "apiVersion": "2015-06-15",
+      "apiVersion": "2019-03-01",
       "type": "Microsoft.Compute/virtualMachines",
-      "name": "[concat('meta-nodeVm', copyindex())]",
+      "name": "[concat('meta-node-', copyindex())]",
       "location": "[parameters('location')]",
+      "plan": {
+        "name": "influxdb-enterprise-meta-byol",
+        "product": "influxdb-enterprise-vm",
+        "publisher": "influxdata"
+      },
       "copy": {
         "name": "meta-nodeVmLoop",
         "count": 3
@@ -144,14 +155,18 @@
         },
         "osProfile": "[reference(concat('Microsoft.Resources/deployments/osProfileMeta', copyindex()), '2015-01-01').outputs.osProfile.value]",
         "storageProfile": {
-          "imageReference": "[parameters('osSettings').imageReference]",
+          "imageReference": {
+            "publisher": "influxdata",
+            "offer": "influxdb-enterprise-vm",
+            "sku": "influxdb-enterprise-meta-byol",
+            "version": "latest"
+          },
           "osDisk": {
-            "name": "osdisk",
-            "vhd": {
-              "uri": "[concat('http://',variables('storageAccountName'),'.blob.core.windows.net/vhds/', variables('vmName'), copyindex(), '-osdisk.vhd')]"
-            },
-            "caching": "ReadWrite",
-            "createOption": "FromImage"
+          "createOption": "FromImage",
+          "managedDisk": {
+            "storageAccountType": "[parameters('storageSettings').accountType]"
+          },
+            "osType": "Linux"
           }
         },
         "networkProfile": {
