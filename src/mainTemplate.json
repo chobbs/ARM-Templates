@@ -10,7 +10,7 @@
         "external"
       ],
       "metadata": {
-        "description": "Setup the load balancer internal or external.  If you are setting up Elasticsearch on an external endpoint you will need to secure your nodes with a product like Elasticsearch Shield"
+        "description": "Setup the load balancer internal or external."
       }
     },
     "jumpbox": {
@@ -145,31 +145,16 @@
       "Yes": "empty/empty-meta-nodes-resources.json"
     },
     "clientPre": "[split(string(parameters('vmClientNodeCount')), '')[0]]",
-    "metaTemplateUrl": "[concat(variables('templateBaseUrl'), variables('metaTemplates')[parameters('dataNodesAreMasterEligible')])]",
+    "metaTemplateUrl": "[concat(variables('templateBaseUrl'), '/machines/meta-nodes.json')]",
     "jumpboxTemplates": {
       "No": "empty/empty-resources.json",
       "Yes": "machines/jumpbox-resources.json"
     },
     "jumpboxTemplateUrl": "[concat(variables('templateBaseUrl'), variables('jumpboxTemplates')[parameters('jumpbox')])]",
-    "kibanaTemplates": {
+    "ChronografTemplates": {
       "No": "empty/empty-resources.json",
-      "Yes": "machines/kibana-resources.json"
+      "Yes": "machines/chronograf-resources.json"
     },
-    "dataNodeShortOpts": {
-      "No": "z",
-      "Yes": ""
-    },
-    "dataNodeShortOpt": "[variables('dataNodeShortOpts')[parameters('dataNodesAreMasterEligible')]]",
-    "dedicatedMasterNodesShortOpts": {
-      "No": "d",
-      "Yes": ""
-    },
-    "dedicatedMasterNodesShortOpt": "[variables('dedicatedMasterNodesShortOpts')[parameters('dataNodesAreMasterEligible')]]",
-    "installPluginsShortOpts": {
-      "No": "",
-      "Yes": "l"
-    },
-    "installPluginsShortOpt": "[variables('installPluginsShortOpts')]",
     "commonInstallParams": "[parameters('vmDataNodeCount')]",
     "ubuntuScripts": [
       "[concat(variables('templateBaseUrl'), 'scripts/elasticsearch-ubuntu-install.sh')]",
@@ -494,7 +479,7 @@
             "value": "[parameters('vmDataNodeCount')]"
           },
           "namespace": {
-            "value": "datanode-"
+            "value": "data-node-"
           },
           "osSettings": {
             "value": "[variables('osSettings')]"

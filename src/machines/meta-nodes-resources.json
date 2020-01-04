@@ -119,7 +119,7 @@
             "value": "[parameters('password')]"
           },
           "computerName": {
-            "value": "[concat('meta-nodeVm', copyindex())]"
+            "value": "[concat('meta-node-', copyindex())]"
           }
         }
       }
@@ -139,7 +139,7 @@
         "count": 3
       },
       "dependsOn": [
-        "[concat('Microsoft.Network/networkInterfaces/', 'metaNodeNic', copyindex())]",
+        "[concat('Microsoft.Network/networkInterfaces/', 'metanode-nic', copyindex())]",
         "[concat('Microsoft.Compute/availabilitySets/', 'influxdb-metanodes')]",
         "[concat('Microsoft.Resources/deployments/', 'osProfileMeta', copyindex())]"
       ],

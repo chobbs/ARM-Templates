@@ -42,7 +42,7 @@
     "osSettings": {
       "type": "object",
       "metadata": {
-        "description": "Elasticsearch deployment platform settings"
+        "description": "InfluxEnterprise deployment platform settings"
       }
     }
   },
@@ -143,7 +143,7 @@
       }
     },
     {
-      "apiVersion": "2015-06-15",
+      "apiVersion": "2019-03-01",
       "type": "Microsoft.Compute/virtualMachines",
       "name": "[variables('vmName')]",
       "location": "[parameters('location')]",
@@ -157,7 +157,12 @@
         },
         "osProfile": "[reference('Microsoft.Resources/deployments/osProfileJumpbox', '2015-01-01').outputs.osProfile.value]",
         "storageProfile": {
-          "imageReference": "[parameters('osSettings').imageReference]",
+          "imageReference": {
+            "publisher": "Canonical",
+            "offer": "UbuntuServer",
+            "sku": "14.04.2-LTS",
+            "version": "latest"
+          },
           "osDisk": {
             "name": "osdisk",
             "vhd": {
