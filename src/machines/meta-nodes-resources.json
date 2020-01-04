@@ -164,7 +164,7 @@
           "osDisk": {
           "createOption": "FromImage",
           "managedDisk": {
-            "storageAccountType": "[parameters('storageSettings').accountType]"
+            "storageAccountType": "Premium_LRS"
           },
             "osType": "Linux"
           }
