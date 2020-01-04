@@ -14,12 +14,6 @@
         "description": "Admin password used when provisioning virtual machines"
       }
     },
-    "storageSettings": {
-      "type": "object",
-      "metadata": {
-        "description": "Storage Account Settings"
-      }
-    },
     "storageAccountName": {
       "type": "string",
       "metadata": {
