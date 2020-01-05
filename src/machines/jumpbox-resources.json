@@ -160,15 +160,16 @@
           "imageReference": {
             "publisher": "Canonical",
             "offer": "UbuntuServer",
-            "sku": "14.04.2-LTS",
+            "sku": "18.04-LTS",
             "version": "latest"
           },
-        "osDisk": {
-          "createOption": "FromImage",
-          "managedDisk": {
-            "storageAccountType": "Standard_LRS"
-          },
-            "osType": "Linux"
+          "osDisk": {
+            "name": "osdisk",
+            "vhd": {
+              "uri": "[concat('http://', parameters('storageAccountName'),'.blob.core.windows.net/vhds/', variables('vmName'), '-osdisk.vhd')]"
+            },
+            "caching": "ReadWrite",
+            "createOption": "FromImage"
           }
         },
         "networkProfile": {
