@@ -108,10 +108,10 @@
     {
       "apiVersion": "2015-06-15",
       "type": "Microsoft.Network/networkInterfaces",
-      "name": "[concat(parameters('namespace'), 'nic', copyindex())]",
+      "name": "[concat('dataNodeNic', copyindex())]",
       "location": "[parameters('location')]",
       "copy": {
-        "name": "[concat(parameters('namespace'),'nicLoop')]",
+        "name": "dataNodesNicLoop",
         "count": "[parameters('vmCount')]"
       },
       "properties": {
@@ -171,7 +171,7 @@
         "count": "[parameters('vmCount')]"
       },
       "dependsOn": [
-        "[concat('Microsoft.Network/networkInterfaces/', parameters('namespace'), 'nic', copyindex())]",
+        "[concat('Microsoft.Network/networkInterfaces/', 'dataNodesNicLoop', copyindex())]",
         "[concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName'), parameters('storageSettings').mapping[copyindex()])]",
         "[concat('Microsoft.Resources/deployments/', 'osProfileData', copyindex())]"
       ],
@@ -201,7 +201,7 @@
         "networkProfile": {
           "networkInterfaces": [
             {
-              "id": "[resourceId('Microsoft.Network/networkInterfaces',concat(parameters('namespace'),'nic', copyindex()))]"
+              "id": "[resourceId('Microsoft.Network/networkInterfaces',concat('dataNodeNic', copyindex()))]"
             }
           ]
         }

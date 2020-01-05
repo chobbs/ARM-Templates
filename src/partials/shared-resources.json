@@ -148,7 +148,7 @@
         ],
         "probes": [
           {
-            "name": "esProbe",
+            "name": "influxProbe",
             "properties": {
               "protocol": "tcp",
               "port": 8086,
