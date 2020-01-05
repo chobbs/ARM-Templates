@@ -93,11 +93,11 @@
     {
       "apiVersion": "2015-06-15",
       "type": "Microsoft.Network/networkInterfaces",
-      "name": "[concat(parameters('namespace'), copyindex())]",
+      "name": "[concat(parameters('namespace'), 'nic', copyindex())]",
       "location": "[parameters('location')]",
       "copy": {
-      "name": "[concat(parameters('namespace'),'nicLoop')]",
-      "count": "[parameters('vmCount')]"
+        "name": "[concat(parameters('namespace'),'nicLoop')]",
+        "count": "[parameters('vmCount')]"
       },
       "properties": {
         "ipConfigurations": [
@@ -185,7 +185,7 @@
         "networkProfile": {
           "networkInterfaces": [
             {
-              "id": "[resourceId('Microsoft.Network/networkInterfaces',concat('dataNodeNic', copyindex()))]"
+              "id": "[resourceId('Microsoft.Network/networkInterfaces',concat(parameters('namespace'),'nic', copyindex()))]"
             }
           ]
         }
