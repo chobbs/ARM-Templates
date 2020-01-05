@@ -74,24 +74,9 @@
   },
   "variables": {
     "templateBaseUrl": "https://raw.githubusercontent.com/chobbs/ARM-Templates/master/src/",
-    "subnetRef": "[concat(resourceId('Microsoft.Network/virtualNetworks', parameters('subnet').vnet), '/subnets/', parameters('subnet').name)]",
-    "storageAccountName": "[concat(parameters('storageSettings').prefix)]"
+    "subnetRef": "[concat(resourceId('Microsoft.Network/virtualNetworks', parameters('subnet').vnet), '/subnets/', parameters('subnet').name)]"
   },
   "resources": [
-    {
-      "type": "Microsoft.Storage/storageAccounts",
-      "name": "[concat(variables('storageAccountName'), copyindex(1))]",
-      "apiVersion": "2018-07-01",
-      "location": "[parameters('location')]",
-      "copy": {
-        "name": "[concat(parameters('namespace'),'storageLoop')]",
-        "count": "[parameters('storageSettings').count]"
-      },
-      "sku": {
-        "name": "[parameters('storageSettings').accountType]"
-      },
-      "kind": "StorageV2"
-    },
     {
       "apiVersion": "2019-03-01",
       "type": "Microsoft.Compute/availabilitySets",
@@ -172,7 +157,6 @@
       },
       "dependsOn": [
         "[concat('Microsoft.Network/networkInterfaces/', 'dataNodesNicLoop', copyindex())]",
-        "[concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName'), parameters('storageSettings').mapping[copyindex()])]",
         "[concat('Microsoft.Resources/deployments/', 'osProfileData', copyindex())]"
       ],
       "properties": {

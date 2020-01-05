@@ -23,6 +23,17 @@
         "description": "Unique identifiers to allow the Azure Infrastructure to understand the origin of resources deployed to Azure. You do not need to supply a value for this."
       }
     },
+    "chronograf": {
+      "type": "string",
+      "defaultValue": "No",
+      "allowedValues": [
+        "Yes",
+        "No"
+      ],
+      "metadata": {
+        "description": "Provision a machine with Chronograf on it"
+      }
+    },
     "jumpbox": {
       "type": "string",
       "defaultValue": "Yes",
@@ -150,10 +161,6 @@
   "variables": {
     "templateBaseUrl": "https://raw.githubusercontent.com/chobbs/ARM-Templates/master/src/",
     "sharedTemplateUrl": "[concat(variables('templateBaseUrl'), '/partials/shared-resources.json')]",
-    "metaTemplates": {
-      "No": "machines/meta-nodes-resources.json",
-      "Yes": "empty/empty-meta-nodes-resources.json"
-    },
     "clientPre": "[split(string(parameters('vmClientNodeCount')), '')[0]]",
     "metaTemplateUrl": "[concat(variables('templateBaseUrl'), 'machines/meta-nodes-resources.json')]",
     "jumpboxTemplates": {
@@ -161,7 +168,7 @@
       "Yes": "machines/jumpbox-resources.json"
     },
     "jumpboxTemplateUrl": "[concat(variables('templateBaseUrl'), variables('jumpboxTemplates')[parameters('jumpbox')])]",
-    "ChronografTemplates": {
+    "chronografTemplates": {
       "No": "empty/empty-resources.json",
       "Yes": "machines/chronograf-resources.json"
     },
