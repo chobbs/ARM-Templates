@@ -127,7 +127,7 @@
         ],
         "loadBalancingRules": [
           {
-            "name": "influx",
+            "name": "influxDB",
             "properties": {
               "frontendIPConfiguration": {
                 "id": "[concat(resourceId('Microsoft.Network/loadBalancers','loadBalancer'),'/frontendIPConfigurations/LBFE')]"
@@ -141,7 +141,7 @@
               "enableFloatingIP": false,
               "idleTimeoutInMinutes": 5,
               "probe": {
-                "id": "[concat(resourceId('Microsoft.Network/loadBalancers','loadBalancer'),'/probes/esProbe')]"
+                "id": "[concat(resourceId('Microsoft.Network/loadBalancers','loadBalancer'),'/probes/influxProbe')]"
               }
             }
           }
