@@ -164,12 +164,11 @@
             "version": "latest"
           },
           "osDisk": {
-            "name": "osdisk",
-            "vhd": {
-              "uri": "[concat('http://', parameters('storageAccountName'),'.blob.core.windows.net/vhds/', variables('vmName'), '-osdisk.vhd')]"
-            },
-            "caching": "ReadWrite",
-            "createOption": "FromImage"
+          "createOption": "FromImage",
+          "managedDisk": {
+            "storageAccountType": "Standard_LRS"
+          },
+            "osType": "Linux"
           }
         },
         "networkProfile": {
