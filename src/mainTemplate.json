@@ -145,7 +145,7 @@
       "Yes": "empty/empty-meta-nodes-resources.json"
     },
     "clientPre": "[split(string(parameters('vmClientNodeCount')), '')[0]]",
-    "metaTemplateUrl": "[concat(variables('templateBaseUrl'), '/machines/meta-nodes.json')]",
+    "metaTemplateUrl": "[concat(variables('templateBaseUrl'), '/machines/meta-nodes-resources.json')]",
     "jumpboxTemplates": {
       "No": "empty/empty-resources.json",
       "Yes": "machines/jumpbox-resources.json"
