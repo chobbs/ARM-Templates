@@ -157,11 +157,12 @@
       },
       "dependsOn": [
         "[concat('Microsoft.Network/networkInterfaces/', parameters('namespace'), 'nic', copyindex())]",
+        "[concat('Microsoft.Compute/availabilitySets/', 'datanodes-set')]",
         "[concat('Microsoft.Resources/deployments/', 'osProfileData', copyindex())]"
       ],
       "properties": {
         "availabilitySet": {
-          "id": "[resourceId('Microsoft.Compute/availabilitySets', concat('datanodes', '-set'))]"
+          "id": "[resourceId('Microsoft.Compute/availabilitySets', 'datanodes-set')]"
         },
         "hardwareProfile": {
           "vmSize": "[parameters('vmSize')]"
