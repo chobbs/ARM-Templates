@@ -376,7 +376,7 @@
       "accountType": "[variables('dataSkuSettings')[parameters('vmSizeDataNodes')].storageAccountType]",
       "prefix": "[concat(variables('storageAccountPrefix'), 'd', uniqueString(resourceGroup().id, deployment().name))]"
     },
-    "dataTemplateUrl": "[concat(variables('templateBaseUrl'), 'datanodes/data-nodes-resources.json')]"
+    "dataTemplateUrl": "[concat(variables('templateBaseUrl'), 'machines/data-nodes-resources.json')]"
   },
   "resources": [
     {
