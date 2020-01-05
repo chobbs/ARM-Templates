@@ -96,8 +96,8 @@
       "name": "[concat('dataNodeNic', copyindex())]",
       "location": "[parameters('location')]",
       "copy": {
-        "name": "dataNodesNicLoop",
-        "count": "[parameters('vmCount')]"
+      "name": "[concat(parameters('namespace'),'nicLoop')]",
+      "count": "[parameters('vmCount')]"
       },
       "properties": {
         "ipConfigurations": [
