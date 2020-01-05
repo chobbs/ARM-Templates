@@ -164,7 +164,6 @@
             "version": "latest"
           },
         "osDisk": {
-          "name": "osdisk",
           "createOption": "FromImage",
           "managedDisk": {
             "storageAccountType": "Standard_LRS"
