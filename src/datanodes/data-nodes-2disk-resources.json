@@ -80,7 +80,7 @@
     {
       "apiVersion": "2019-03-01",
       "type": "Microsoft.Compute/availabilitySets",
-      "name": "[concat(parameters('namespace'), 'set')]",
+      "name": "[concat('datanodes', '-set')]",
       "location": "[parameters('location')]",
       "properties": {
         "platformUpdateDomainCount": 20,
@@ -144,7 +144,7 @@
     {
       "apiVersion": "2019-03-01",
       "type": "Microsoft.Compute/virtualMachines",
-      "name": "[concat(parameters('namespace'), 'vm', copyindex())]",
+      "name": "[concat('data-node-', copyindex())]",
       "location": "[parameters('location')]",
       "plan": {
         "name": "influxdb-enterprise-data-byol",
@@ -161,7 +161,7 @@
       ],
       "properties": {
         "availabilitySet": {
-          "id": "[resourceId('Microsoft.Compute/availabilitySets', concat(parameters('namespace'), 'set'))]"
+          "id": "[resourceId('Microsoft.Compute/availabilitySets', concat('datanodes', '-set'))]"
         },
         "hardwareProfile": {
           "vmSize": "[parameters('vmSize')]"
