@@ -76,17 +76,6 @@
         "description": "Number of InfluxEnterprise data nodes"
       }
     },
-    "dataNodesAreMasterEligible": {
-      "type": "string",
-      "defaultValue": "No",
-      "allowedValues": [
-        "Yes",
-        "No"
-      ],
-      "metadata": {
-        "description": "Make all datanodes master eligible, this can be useful for small elasticsearch cluster deploys"
-      }
-    },
     "vmSizeMetaNodes": {
       "type": "string",
       "defaultValue": "Standard_A1",
@@ -174,10 +163,10 @@
     },
     "commonInstallParams": "[parameters('vmDataNodeCount')]",
     "ubuntuScripts": [
-      "[concat(variables('templateBaseUrl'), 'scripts/elasticsearch-ubuntu-install.sh')]",
+      "[concat(variables('templateBaseUrl'), 'scripts/datanodes-configure.sh')]",
       "https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/shared_scripts/ubuntu/vm-disk-utils-0.1.sh"
     ],
-    "clientInstallScript": "[concat('bash elasticsearch-ubuntu-install.sh -y',  variables('commonInstallParams'))]",
+    "clientInstallScript": "[concat('bash datanodes-configure.sh -y',  variables('commonInstallParams'))]",
     "ubuntuSettings": {
       "imageReference": {
         "publisher": "Canonical",
@@ -387,7 +376,7 @@
       "accountType": "[variables('dataSkuSettings')[parameters('vmSizeDataNodes')].storageAccountType]",
       "prefix": "[concat(variables('storageAccountPrefix'), 'd', uniqueString(resourceGroup().id, deployment().name))]"
     },
-    "dataTemplateUrl": "[concat(variables('templateBaseUrl'), 'datanodes/data-nodes-', string(variables('dataSkuSettings')[parameters('vmSizeDataNodes')].dataDisks), 'disk-resources.json')]"
+    "dataTemplateUrl": "[concat(variables('templateBaseUrl'), 'datanodes/data-nodes-resources.json')]"
   },
   "resources": [
     {
@@ -482,6 +471,9 @@
           },
           "location": {
             "value": "[variables('location')]"
+          },
+          "influxTags": {
+            "value": "[parameters('influxTags')]"
           },
           "storageSettings": {
             "value": "[variables('dataNodeStorageSettings')]"

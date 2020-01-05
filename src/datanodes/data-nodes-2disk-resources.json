@@ -80,7 +80,7 @@
     {
       "apiVersion": "2019-03-01",
       "type": "Microsoft.Compute/availabilitySets",
-      "name": "[concat('datanodes', '-set')]",
+      "name": "[concat('datanode', '-set')]",
       "location": "[parameters('location')]",
       "properties": {
         "platformUpdateDomainCount": 20,
@@ -157,12 +157,12 @@
       },
       "dependsOn": [
         "[concat('Microsoft.Network/networkInterfaces/', parameters('namespace'), 'nic', copyindex())]",
-        "[concat('Microsoft.Compute/availabilitySets/', 'datanodes-set')]",
+        "[concat('Microsoft.Compute/availabilitySets/', 'datanode-set')]",
         "[concat('Microsoft.Resources/deployments/', 'osProfileData', copyindex())]"
       ],
       "properties": {
         "availabilitySet": {
-          "id": "[resourceId('Microsoft.Compute/availabilitySets', 'datanodes-set')]"
+          "id": "[resourceId('Microsoft.Compute/availabilitySets', 'datanode-set')]"
         },
         "hardwareProfile": {
           "vmSize": "[parameters('vmSize')]"
