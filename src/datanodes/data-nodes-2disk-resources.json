@@ -156,7 +156,7 @@
         "count": "[parameters('vmCount')]"
       },
       "dependsOn": [
-        "[concat('Microsoft.Network/networkInterfaces/', 'dataNodesNicLoop', copyindex())]",
+        "[concat('Microsoft.Network/networkInterfaces/', parameters('namespace'), 'nic', copyindex())]",
         "[concat('Microsoft.Resources/deployments/', 'osProfileData', copyindex())]"
       ],
       "properties": {
