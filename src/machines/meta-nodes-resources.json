@@ -55,15 +55,13 @@
   },
   "variables": {
     "templateBaseUrl": "https://raw.githubusercontent.com/chobbs/ARM-Templates/master/src/",
-    "subnetRef": "[concat(resourceId('Microsoft.Network/virtualNetworks', parameters('subnet').vnet), '/subnets/', parameters('subnet').name)]",
-    "storageAccountName": "[parameters('storageAccountName')]",
-    "vmName": "meta-nodeVm"
+    "subnetRef": "[concat(resourceId('Microsoft.Network/virtualNetworks', parameters('subnet').vnet), '/subnets/', parameters('subnet').name)]"
   },
   "resources": [
     {
       "apiVersion": "2019-03-01",
       "type": "Microsoft.Compute/availabilitySets",
-      "name": "influxdb-metanodes",
+      "name": "metanodes-set'",
       "location": "[parameters('location')]",
       "properties": {
         "platformUpdateDomainCount": 3,
