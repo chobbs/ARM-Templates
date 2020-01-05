@@ -163,13 +163,13 @@
             "sku": "14.04.2-LTS",
             "version": "latest"
           },
-          "osDisk": {
-            "name": "osdisk",
-            "vhd": {
-              "uri": "[concat('http://', parameters('storageAccountName'),'.blob.core.windows.net/vhds/', variables('vmName'), '-osdisk.vhd')]"
-            },
-            "caching": "ReadWrite",
-            "createOption": "FromImage"
+        "osDisk": {
+          "name": "osdisk",
+          "createOption": "FromImage",
+          "managedDisk": {
+            "storageAccountType": "Standard_LRS"
+          },
+            "osType": "Linux"
           }
         },
         "networkProfile": {
