@@ -61,7 +61,7 @@
     {
       "apiVersion": "2019-03-01",
       "type": "Microsoft.Compute/availabilitySets",
-      "name": "metanodes-set",
+      "name": "[concat('metanode', '-set')]",
       "location": "[parameters('location')]",
       "properties": {
         "platformUpdateDomainCount": 3,
@@ -138,12 +138,12 @@
       },
       "dependsOn": [
         "[concat('Microsoft.Network/networkInterfaces/', 'metaNodeNic', copyindex())]",
-        "[concat('Microsoft.Compute/availabilitySets/', 'metanodes-set')]",
+        "[concat('Microsoft.Compute/availabilitySets/', 'metanode-set')]",
         "[concat('Microsoft.Resources/deployments/', 'osProfileMeta', copyindex())]"
       ],
       "properties": {
         "availabilitySet": {
-          "id": "[resourceId('Microsoft.Compute/availabilitySets', 'metanodes-set')]"
+          "id": "[resourceId('Microsoft.Compute/availabilitySets', 'metanode-set')]"
         },
         "hardwareProfile": {
           "vmSize": "[parameters('vmSize')]"
