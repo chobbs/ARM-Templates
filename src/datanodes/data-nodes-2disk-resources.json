@@ -95,7 +95,7 @@
     {
       "apiVersion": "2019-03-01",
       "type": "Microsoft.Compute/availabilitySets",
-      "name": "[concat(parameters('namespace'), '-set')]",
+      "name": "[concat(parameters('namespace'), 'set')]",
       "location": "[parameters('location')]",
       "properties": {
         "platformUpdateDomainCount": 20,
