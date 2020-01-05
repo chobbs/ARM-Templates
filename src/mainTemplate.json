@@ -13,6 +13,16 @@
         "description": "Setup the load balancer internal or external."
       }
     },
+    "influxTags": {
+      "type": "object",
+      "defaultValue": {
+        "provider": "influxdata",
+        "tracking": "pid-300e07de-2c76-5904-be70-589ac8f15cf8"
+      },
+      "metadata": {
+        "description": "Unique identifiers to allow the Azure Infrastructure to understand the origin of resources deployed to Azure. You do not need to supply a value for this."
+      }
+    },
     "jumpbox": {
       "type": "string",
       "defaultValue": "Yes",
@@ -145,7 +155,7 @@
       "Yes": "empty/empty-meta-nodes-resources.json"
     },
     "clientPre": "[split(string(parameters('vmClientNodeCount')), '')[0]]",
-    "metaTemplateUrl": "[concat(variables('templateBaseUrl'), '/machines/meta-nodes-resources.json')]",
+    "metaTemplateUrl": "[concat(variables('templateBaseUrl'), 'machines/meta-nodes-resources.json')]",
     "jumpboxTemplates": {
       "No": "empty/empty-resources.json",
       "Yes": "machines/jumpbox-resources.json"

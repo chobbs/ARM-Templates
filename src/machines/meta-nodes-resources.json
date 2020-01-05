@@ -76,7 +76,7 @@
     {
       "apiVersion": "2015-06-15",
       "type": "Microsoft.Network/networkInterfaces",
-      "name": "[concat('metaNodeNic', copyindex())]",
+      "name": "[concat('metanode-nic', copyindex())]",
       "location": "[parameters('location')]",
       "copy": {
         "name": "metaNodesNicLoop",
