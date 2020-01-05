@@ -93,7 +93,7 @@
     {
       "apiVersion": "2015-06-15",
       "type": "Microsoft.Network/networkInterfaces",
-      "name": "[concat('dataNodeNic', copyindex())]",
+      "name": "[concat(parameters('namespace'), copyindex())]",
       "location": "[parameters('location')]",
       "copy": {
       "name": "[concat(parameters('namespace'),'nicLoop')]",
