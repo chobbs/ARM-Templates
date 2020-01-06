@@ -21,6 +21,15 @@
         "description": "Location where resources will be provisioned"
       }
     },
+    "influxTags": {
+      "type": "object",
+      "defaultValue": {
+        "provider": "influxdata"
+      },
+      "metadata": {
+        "description": "Unique identifiers to allow the Azure Infrastructure to understand the origin of resources deployed to Azure. You do not need to supply a value for this."
+      }
+    },
     "subnet": {
       "type": "object",
       "metadata": {
@@ -92,7 +101,7 @@
     {
       "name": "[concat('osProfileMeta', copyindex())]",
       "type": "Microsoft.Resources/deployments",
-      "apiVersion": "2015-01-01",
+      "apiVersion": "2019-05-01",
       "copy": {
         "name": "osProfileLoop",
         "count": 3
@@ -121,6 +130,9 @@
       "type": "Microsoft.Compute/virtualMachines",
       "name": "[concat('meta-node-', 'vm', copyindex())]",
       "location": "[parameters('location')]",
+      "tags": {
+        "provider": "[toUpper(parameters('influxTags').provider)]"
+      },
       "plan": {
         "name": "influxdb-enterprise-meta-byol",
         "product": "influxdb-enterprise-vm",
@@ -142,7 +154,7 @@
         "hardwareProfile": {
           "vmSize": "[parameters('vmSize')]"
         },
-        "osProfile": "[reference(concat('Microsoft.Resources/deployments/osProfileMeta', copyindex()), '2015-01-01').outputs.osProfile.value]",
+        "osProfile": "[reference(concat('Microsoft.Resources/deployments/osProfileMeta', copyindex()), '2019-05-01').outputs.osProfile.value]",
         "storageProfile": {
           "imageReference": {
             "publisher": "influxdata",

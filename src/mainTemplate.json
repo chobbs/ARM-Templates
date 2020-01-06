@@ -406,6 +406,9 @@
           "location": {
             "value": "[variables('location')]"
           },
+          "influxTags": {
+            "value": "[parameters('influxTags')]"
+          },
           "vmSize": {
             "value": "[parameters('vmSizeMetaNodes')]"
           },
@@ -545,6 +548,9 @@
         "parameters": {
           "adminUsername": {
             "value": "[parameters('adminUsername')]"
+          },
+          "influxTags": {
+            "value": "[parameters('influxTags')]"
           },
           "password": {
             "value": "[parameters('password')]"

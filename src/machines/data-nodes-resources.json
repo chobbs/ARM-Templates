@@ -126,7 +126,7 @@
     {
       "name": "[concat('osProfileData', copyindex())]",
       "type": "Microsoft.Resources/deployments",
-      "apiVersion": "2015-01-01",
+      "apiVersion": "2019-05-01",
       "copy": {
         "name": "osProfileLoop",
         "count": "[parameters('vmCount')]"
@@ -179,7 +179,7 @@
         "hardwareProfile": {
           "vmSize": "[parameters('vmSize')]"
         },
-        "osProfile": "[reference(concat('Microsoft.Resources/deployments/osProfileData', copyindex()), '2015-01-01').outputs.osProfile.value]",
+        "osProfile": "[reference(concat('Microsoft.Resources/deployments/osProfileData', copyindex()), '2019-05-01').outputs.osProfile.value]",
         "storageProfile": {
           "imageReference": {
             "publisher": "influxdata",
