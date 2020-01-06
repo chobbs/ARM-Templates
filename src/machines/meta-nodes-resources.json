@@ -14,12 +14,6 @@
         "description": "Admin password used when provisioning virtual machines"
       }
     },
-    "storageAccountName": {
-      "type": "string",
-      "metadata": {
-        "description": "Unique namespace for the Storage Account where the Virtual Machine's disks will be placed"
-      }
-    },
     "location": {
       "type": "string",
       "defaultValue": "West US",
