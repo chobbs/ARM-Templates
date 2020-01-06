@@ -43,13 +43,13 @@
       "type": "string",
       "defaultValue": "Standard_A0",
       "metadata": {
-        "description": "Size of the Elasticsearch master nodes"
+        "description": "Size of the InfluxEnterprise meta nodes"
       }
     },
     "osSettings": {
       "type": "object",
       "metadata": {
-        "description": "Elasticsearch deployment platform settings"
+        "description": "InfluxEnterprise deployment platform settings"
       }
     }
   },

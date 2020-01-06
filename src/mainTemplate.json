@@ -104,7 +104,7 @@
       "type": "int",
       "defaultValue": 0,
       "metadata": {
-        "description": "Number of Elasticsearch client nodes to provision (Setting this to zero puts the data nodes on the load balancer)"
+        "description": "Number of IinfluxEnterprise client nodes to provision (Setting this to zero puts the data nodes on the load balancer)"
       }
     },
     "adminUsername": {

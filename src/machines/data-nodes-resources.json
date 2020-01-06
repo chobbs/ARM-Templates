@@ -45,14 +45,14 @@
       "type": "string",
       "defaultValue": "Standard_A1",
       "metadata": {
-        "description": "Size of the Elasticsearch data nodes"
+        "description": "Size of the InfluxEnterprise data nodes"
       }
     },
     "vmCount": {
       "type": "int",
       "defaultValue": 2,
       "metadata": {
-        "description": "Number of Elasticsearch data nodes"
+        "description": "Number of InfluxEnterpirse data nodes"
       }
     },
     "osSettings": {

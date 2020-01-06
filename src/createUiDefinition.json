@@ -50,9 +50,9 @@
           {
             "name": "esVersion",
             "type": "Microsoft.Common.DropDown",
-            "label": "Elasticsearch version",
+            "label": "InfluxEnterpirse version",
             "defaultValue": "v2.0.0",
-            "toolTip": "Choose a version of Elasticsearch.",
+            "toolTip": "Choose a version of InfluxEnterpirse.",
             "constraints": {
               "allowedValues": [
                 {
@@ -71,7 +71,7 @@
             "type": "Microsoft.Common.TextBox",
             "label": "Cluster name",
             "defaultValue": "",
-            "toolTip": "Name your Elasticsearch cluster.",
+            "toolTip": "Name your InfluxEnterpirse cluster.",
             "constraints": {
               "required": true,
               "validationMessage": "TODO"
