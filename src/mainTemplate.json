@@ -161,6 +161,7 @@
       "No": "empty/empty-resources.json",
       "Yes": "machines/chronograf-resources.json"
     },
+    "chronografTemplateUrl": "[concat(variables('templateBaseUrl'), variables('chronografTemplates')[parameters('chronograf')])]",
     "commonInstallParams": "[parameters('vmDataNodeCount')]",
     "ubuntuScripts": [
       "[concat(variables('templateBaseUrl'), 'scripts/datanodes-configure.sh')]",
@@ -179,7 +180,7 @@
         "meta": {
           "publisher": "Microsoft.OSTCExtensions",
           "type": "CustomScriptForLinux",
-          "typeHandlerVersion": "1.2",
+          "typeHandlerVersion": "1.0",
           "settings": {
             "fileUris": "[variables('ubuntuScripts')]"
           }
@@ -187,7 +188,7 @@
         "data": {
           "publisher": "Microsoft.OSTCExtensions",
           "type": "CustomScriptForLinux",
-          "typeHandlerVersion": "1.2",
+          "typeHandlerVersion": "1.0",
           "settings": {
             "fileUris": "[variables('ubuntuScripts')]"
           }
@@ -382,7 +383,7 @@
     {
       "name": "meta-nodes",
       "type": "Microsoft.Resources/deployments",
-      "apiVersion": "2015-01-01",
+      "apiVersion": "2019-05-01",
       "dependsOn": [
         "[concat('Microsoft.Resources/deployments/', 'shared')]"
       ],
@@ -423,7 +424,7 @@
     {
       "name": "shared",
       "type": "Microsoft.Resources/deployments",
-      "apiVersion": "2015-01-01",
+      "apiVersion": "2019-05-01",
       "properties": {
         "mode": "Incremental",
         "templateLink": {
@@ -452,7 +453,7 @@
     {
       "name": "data-nodes",
       "type": "Microsoft.Resources/deployments",
-      "apiVersion": "2015-01-01",
+      "apiVersion": "2019-05-01",
       "dependsOn": [
         "[concat('Microsoft.Resources/deployments/', 'shared')]"
       ],
@@ -502,7 +503,7 @@
     {
       "name": "jumpbox",
       "type": "Microsoft.Resources/deployments",
-      "apiVersion": "2015-01-01",
+      "apiVersion": "2019-05-01",
       "dependsOn": [
         "[concat('Microsoft.Resources/deployments/', 'shared')]"
       ],
@@ -510,6 +511,41 @@
         "mode": "Incremental",
         "templateLink": {
           "uri": "[variables('jumpboxTemplateUrl')]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "storageAccountName": {
+            "value": "[variables('storageAccountNameShared')]"
+          },
+          "adminUsername": {
+            "value": "[parameters('adminUsername')]"
+          },
+          "password": {
+            "value": "[parameters('password')]"
+          },
+          "location": {
+            "value": "[variables('location')]"
+          },
+          "subnet": {
+            "value": "[variables('networkSettings').subnet.data]"
+          },
+          "osSettings": {
+            "value": "[variables('osSettings')]"
+          }
+        }
+      }
+    },
+     {
+      "name": "chronograf",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2019-05-01",
+      "dependsOn": [
+        "[concat('Microsoft.Resources/deployments/', 'data-nodes')]"
+      ],
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[variables('chronografTemplateUrl')]",
           "contentVersion": "1.0.0.0"
         },
         "parameters": {

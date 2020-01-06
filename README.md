@@ -30,25 +30,27 @@ Then make sure you are in Incremental mode
 $ az config mode Incremental
 ```
 
-Then create a resource group `<name>` in a `<location>` (e.g `centralus`) where we can deploy too
+Then create a resource group `<group>` in a `<location>` (e.g `centralus`) where we can deploy too
 
 ```shell
-$ az group create <name> <location>
+$ az group create <group> <location>
 ```
 
 Next we can either use our published template directly using `--template-uri`
 
-> $ az group deployment create --template-uri https://raw.githubusercontent.com/chobbs/ARM-Templates/master/src/mainTemplate.json --parameters-file parameters/password.parameters.json
+> az group deployment create --template-uri https://raw.githubusercontent.com/chobbs/ARM-Templates/master/src/mainTemplate.json --verbose --resource-group "${group}" --mode Incremental --parameters parameters/password.parameters.json
 
 or if your are executing commands from a clone of this repo using `--template-file`
 
-> $ az group deployment create --template-file src/mainTemplate.json --parameters-file parameters/password.parameters.json
+> $ az group deployment create --template-file src/mainTemplate.json --parameters parameters/password.parameters.json
 
-`<name>` in these last two examples refers to the resource group you just created.
+> az group deployment create --template-file src/mainTemplate.json --verbose --resource-group "${group}" --mode Incremental --parameters parameters/password.parameters.json
+
+`<group>` in these last two examples refers to the resource group you just created.
 
 **NOTE**
 
-The `--parameters-file` can specify a different location for the items that get provisioned inside of the resource group. Make sure these are the same prior to deploying if you need them to be. Omitting location from the parameters file is another way to make sure the resources get deployed in the same location as the resource group.
+The `--parameters` can specify a different location for the items that get provisioned inside of the resource group. Make sure these are the same prior to deploying if you need them to be. Omitting location from the parameters file is another way to make sure the resources get deployed in the same location as the resource group.
 
 ### Web based deploy
 

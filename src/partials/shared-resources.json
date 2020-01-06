@@ -16,7 +16,7 @@
     },
     "loadBalancerType": {
       "type": "string",
-      "defaultValue": "internal",
+      "defaultValue": "external",
       "allowedValues": [
         "internal",
         "external"

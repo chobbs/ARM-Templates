@@ -21,12 +21,6 @@
         "description": "Subnet object for provisioning resources in (expects properties name as the subnet name, and vnet as the virtual network name on the object)"
       }
     },
-    "storageAccountName": {
-      "type": "string",
-      "metadata": {
-        "description": "Existing Storage Account where the Virtual Machine's disks will be placed"
-      }
-    },
     "adminUsername": {
       "type": "string",
       "metadata": {
