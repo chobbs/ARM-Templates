@@ -35,6 +35,12 @@ Then create a resource group `<group>` in a `<location>` (e.g `centralus`) where
 ```shell
 $ az group create <group> <location>
 ```
+You will need to accept the `Legal Terms` of the offer before deploying the template. 
+
+```shell
+$ az vm image accept-terms --urn influxdata:influxdb-enterprise-vm:influxdb-enterprise-data-byol:1.7.90
+$ az vm image accept-terms --urn influxdata:influxdb-enterprise-vm:influxdb-enterprise-meta-byol:1.7.90
+```
 
 Next we can either use our published template directly using `--template-uri`
 

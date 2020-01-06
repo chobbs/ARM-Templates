@@ -243,7 +243,7 @@
     "outputs": {
       "deploymnetName": "[steps('clusterSettingsStep').deploymnetName]",
       "loadBalancerType": "[steps('externalAccessStep').loadBalancerType]",
-      "chronograf": "[steps('externalAccessStep').kibana]",
+      "chronograf": "[steps('externalAccessStep').chronograf]",
       "jumpbox": "[steps('externalAccessStep').jumpbox]",
       "vmSizeDataNodes": "[steps('nodesStep').vmSizeDataNodes]",
       "vmDataNodeCount": "[steps('nodesStep').vmDataNodeCount]",

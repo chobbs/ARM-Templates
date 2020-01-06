@@ -153,7 +153,7 @@
     {
       "apiVersion": "2019-03-01",
       "type": "Microsoft.Compute/virtualMachines",
-      "name": "[concat('data-node-', copyindex())]",
+      "name": "[concat('data-node-', 'vm', copyindex())]",
       "location": "[parameters('location')]",
       "tags": {
         "provider": "[toUpper(parameters('influxTags').provider)]"
