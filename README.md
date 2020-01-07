@@ -18,24 +18,11 @@ The output from the market place UI is fed directly to the ARM template. You can
 
 <table>
   <tr><th>Parameter</td><th>Type</th><th>Description</th></tr>
-  <tr><td>esVersion</td><td>enum</td>
-    <td>A valid supported Elasticsearch version see <a href="https://github.com/Mpdreamz/ARM-Templates/blob/master/src/mainTemplate.json#L8">this list for supported versions</a>
-    </td></tr>
-  <tr><td>esClusterName</td><td>string</td>
-    <td> The name of the Elasticsearch cluster
-    </td></tr>
-
   <tr><td>loadBalancerType</td><td>string</td>
     <td>Whether the loadbalancer should be <code>internal</code> or <code>external</code>
     If you run <code>external</code> you should also install the shield plugin and look into setting up SSL on your endpoint
     </td></tr>
-
-  <tr><td>esPlugins</td><td>string</td>
-    <td>Either <code>Yes</code> or <code>No</code> whether to install the elasticsearch suite of
-    plugins (Shield, Watcher, Marvel)
-    </td></tr>
-
-  <tr><td>kibana</td><td>string</td>
+  <tr><td>chronograf</td><td>string</td>
     <td>Either <code>Yes</code> or <code>No</code> provision an extra machine with a public IP that
     has Kibana installed on it. If you have opted to also install the Elasticsearch plugins using <code>esPlugins</code> then the Marvel and Sense Kibana apps get installed as well.
     </td></tr>
@@ -45,28 +32,19 @@ The output from the market place UI is fed directly to the ARM template. You can
     </td></tr>
 
   <tr><td>vmSizeDataNodes</td><td>string</td>
-    <td>Azure VM size of the data nodes see <a href="https://github.com/Mpdreamz/ARM-Templates/blob/master/src/mainTemplate.json#L69">this list for supported sizes</a>
+    <td>Azure VM size of the data nodes see <a href="https://github.com/chobbs/ARM-Templates/blob/master/src/mainTemplate.json#L69">this list for supported sizes</a>
     </td></tr>
 
   <tr><td>vmDataNodeCount</td><td>int</td>
     <td>The number of data nodes you wish to deploy. Should be greater than 0.
     </td></tr>
 
-  <tr><td>dataNodesAreMasterEligible</td><td>string</td>
-    <td>Either <code>Yes</code> or <code>No</code> Make all data nodes master eligible, this can be useful for small Elasticsearch clusters. When <code>Yes</code> no dedicated master nodes will be provisioned
-    </td></tr>
-
-  <tr><td>vmSizeMasterNodes</td><td>string</td>
-    <td>Azure VM size of the master nodes see <a href="https://github.com/Mpdreamz/ARM-Templates/blob/master/src/mainTemplate.json#L69">this list for supported sizes</a>. By default the template deploys 3 dedicated master nodes, unless <code>dataNodesAreMasterEligible</code> is set to <code>Yes</code>
-    </td></tr>
-
-  <tr><td>vmClientNodeCount</td><td>int</td>
-    <td> The number of client nodes to provision. Defaults 0 and can be any positive integer. By default the data nodes are directly exposed on the loadbalancer. If you provision client nodes, only these will be added to the loadbalancer.
-    </td></tr>
-
-  <tr><td>vmSizeClientNodes</td><td>string</td>
-    <td> Azure VM size of the client nodes see <a href="https://github.com/Mpdreamz/ARM-Templates/blob/master/src/mainTemplate.json#L69">this list for supported sizes</a>.
-    </td></tr>
+  <tr><td>vmDataNodeDiskSize</td><td>string</td>
+    <td>The disk size of each attached disk. Choose <code>32TiB</code>, <code>16TiB</code>, <code>8TiB</code>, <code>4TiB</code>, <code>2TiB</code>, <code>1TiB</code>, <code>512GiB</code>, <code>256GiB</code>, <code>128GiB</code>, <code>64GiB</code> or <code>32GiB</code>.
+    For Premium Storage, disk sizes equate to <a href="https://docs.microsoft.com/en-us/azure/storage/storage-premium-storage#premium-storage-disks-limits">P80, P70, P60, P50, P40, P30, P20, P15, P10 and P6</a>
+    storage disk types, respectively.
+    </td>
+  </td><td><code>1TiB</code></td></tr>
 
   <tr><td>adminUsername</td><td>string</td>
     <td>Admin username used when provisioning virtual machines
@@ -75,19 +53,7 @@ The output from the market place UI is fed directly to the ARM template. You can
   <tr><td>password</td><td>object</td>
     <td>Password is a complex object parameter, we support both authenticating through username/pass or ssh keys. See the <a href="https://github.com/Mpdreamz/ARM-Templates/tree/master/parameters"> parameters example folder</a> for an example of what to pass for either option.
     </td></tr>
-
-  <tr><td>shieldAdminPassword</td><td>securestring</td>
-    <td>Shield password for the <code>es_admin</code> user with admin role, must be &gt; 6 characters
-    </td></tr>
-
-  <tr><td>shieldReadPassword</td><td>securestring</td>
-    <td>Shield password for the <code>es_read</code> user with user (read-only) role, must be &gt; 6 characters
-    </td></tr>
-
-  <tr><td>shieldKibanaPassword</td><td>securestring</td>
-    <td>Shield password for the <code>es_kibana</code> user with kibana4 role, must be &gt; 6 characters
-    </td></tr>
-
+    
   <tr><td>location</td><td>string</td>
     <td>The location where to provision all the items in this template. Defaults to the special <code>ResourceGroup</code> value which means it will inherit the location
     from the resource group see <a href="https://github.com/Mpdreamz/ARM-Templates/blob/master/src/mainTemplate.json#L197">this list for supported locations</a>.
