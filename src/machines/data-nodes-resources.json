@@ -76,6 +76,7 @@
     },
     "namespace": {
       "type": "string",
+      "defaultValue": "data-node-",
       "metadata": {
         "description": "The namespace for resources created by this template"
       }

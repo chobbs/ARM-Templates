@@ -121,7 +121,7 @@
       },
       "dependsOn": [
         "[concat('Microsoft.Network/publicIPAddresses/', variables('publicIpName'))]",
-        "[concat('Microsoft.Network/networkSecurityGro ups/', variables('securityGroupName'))]"
+        "[concat('Microsoft.Network/networkSecurityGroups/', variables('securityGroupName'))]"
       ],
       "properties": {
         "ipConfigurations": [
