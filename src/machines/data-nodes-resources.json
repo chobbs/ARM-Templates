@@ -200,7 +200,7 @@
             "writeAcceleratorEnabled": true,
             "name": "[concat(parameters('namespace'),'datadisk')]",
             "caching": "None",
-            "createOption": "FromImage",
+            "createOption": "Empty",
             "managedDisk": {
             "storageAccountType": "[parameters('storageSettings').accountType]"
               }
