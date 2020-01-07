@@ -1,0 +1,9 @@
+# Logs
+logs
+*.log
+
+#headless testing config
+vmtest.json
+
+# .DS_File parameters file
+.DS_Store
