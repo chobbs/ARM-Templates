@@ -198,7 +198,6 @@
           {
             "lun": 0,
             "diskSizeGB": 32,
-            "writeAcceleratorEnabled": true,
             "name": "[concat(parameters('namespace'),'datadisk')]",
             "caching": "None",
             "createOption": "Empty",
