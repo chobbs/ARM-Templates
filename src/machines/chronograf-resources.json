@@ -10,6 +10,7 @@
     },
     "namespace": {
       "type": "string",
+      "defaultValue": "chronograf",
       "metadata": {
         "description": "The namespace prefix for resources created by this template"
       }
