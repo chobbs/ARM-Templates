@@ -2,7 +2,14 @@
   "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
   "contentVersion": "1.0.0.0",
   "parameters": {
-    "loadBalancerType": {
+  "_artifactsLocation": {
+      "type": "string",
+      "defaultValue": "https://raw.githubusercontent.com/influxdata/azure-resource-manager-influxdb-enterprise/src/",
+      "metadata": {
+        "description": "The base URI where artifacts required by this template are located, including a trailing '/'"
+      }
+    },
+    "loadBalancerType": { 
       "type": "string",
       "defaultValue": "external",
       "allowedValues": [
@@ -148,24 +155,22 @@
     }
   },
   "variables": {
-    "templateBaseUrl": "https://raw.githubusercontent.com/chobbs/ARM-Templates/master/src/",
-    "sharedTemplateUrl": "[concat(variables('templateBaseUrl'), '/partials/shared-resources.json')]",
+    "sharedTemplateUrl": "[uri(parameters('_artifactsLocation'), 'partials/shared-resources.json')]",
     "clientPre": "[split(string(parameters('vmClientNodeCount')), '')[0]]",
-    "metaTemplateUrl": "[concat(variables('templateBaseUrl'), 'machines/meta-nodes-resources.json')]",
+    "metaTemplateUrl": "[uri(parameters('_artifactsLocation'), 'machines/meta-nodes-resources.json')]",
     "jumpboxTemplates": {
       "No": "empty/empty-resources.json",
       "Yes": "machines/jumpbox-resources.json"
     },
-    "jumpboxTemplateUrl": "[concat(variables('templateBaseUrl'), variables('jumpboxTemplates')[parameters('jumpbox')])]",
+    "jumpboxTemplateUrl": "[uri(parameters('_artifactsLocation'), variables('jumpboxTemplates')[parameters('jumpbox')])]",
     "chronografTemplates": {
       "No": "empty/empty-resources.json",
       "Yes": "machines/chronograf-resources.json"
     },
-    "chronografTemplateUrl": "[concat(variables('templateBaseUrl'), variables('chronografTemplates')[parameters('chronograf')])]",
+    "chronografTemplateUrl": "[uri(parameters('_artifactsLocation'), variables('chronografTemplates')[parameters('chronograf')])]",
     "commonInstallParams": "[parameters('vmDataNodeCount')]",
     "ubuntuScripts": [
-      "[concat(variables('templateBaseUrl'), 'scripts/datanodes-configure.sh')]",
-      "https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/shared_scripts/ubuntu/vm-disk-utils-0.1.sh"
+      "[uri(parameters('_artifactsLocation'), 'scripts/datanodes-configure.sh')]"
     ],
     "clientInstallScript": "[concat('bash datanodes-configure.sh -y',  variables('commonInstallParams'))]",
     "ubuntuSettings": {
@@ -377,7 +382,7 @@
       "accountType": "[variables('dataSkuSettings')[parameters('vmSizeDataNodes')].storageAccountType]",
       "prefix": "[concat(variables('storageAccountPrefix'), 'd', uniqueString(resourceGroup().id, deployment().name))]"
     },
-    "dataTemplateUrl": "[concat(variables('templateBaseUrl'), 'machines/data-nodes-resources.json')]"
+    "dataTemplateUrl": "[uri(parameters('_artifactsLocation'), 'machines/data-nodes-resources.json')]"
   },
   "resources": [
     {
@@ -399,6 +404,9 @@
           },
           "password": {
             "value": "[parameters('password')]"
+          },
+          "_artifactsLocation": {
+            "value": "[parameters('_artifactsLocation')]"
           },
           "metaNodesIpPrefix": {
             "value": "[variables('metaNodesIpPrefix')]"
@@ -470,6 +478,9 @@
           "password": {
             "value": "[parameters('password')]"
           },
+          "_artifactsLocation": {
+            "value": "[parameters('_artifactsLocation')]"
+          },
           "location": {
             "value": "[variables('location')]"
           },
@@ -520,6 +531,9 @@
           "password": {
             "value": "[parameters('password')]"
           },
+          "_artifactsLocation": {
+            "value": "[parameters('_artifactsLocation')]"
+          },
           "location": {
             "value": "[variables('location')]"
           },
@@ -554,6 +568,9 @@
           },
           "password": {
             "value": "[parameters('password')]"
+          },
+          "_artifactsLocation": {
+            "value": "[parameters('_artifactsLocation')]"
           },
           "location": {
             "value": "[variables('location')]"
