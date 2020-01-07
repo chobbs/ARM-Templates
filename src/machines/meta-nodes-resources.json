@@ -168,7 +168,7 @@
             "version": "latest"
           },
           "osDisk": {
-            "name": "[concat('metanode-','osdisk')]",
+            "name": "[concat('metanode-', 'vm', copyindex(), '-osdisk')]",
             "createOption": "FromImage",
             "diskSizeGB": 32,
             "managedDisk": {
