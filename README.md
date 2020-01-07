@@ -18,37 +18,25 @@ This repository consists of:
 
 ### Command line deploy
 
-first make sure you are logged into azure
+Begin by making sure your logged into your azure account with your subscription ID.
 
 ```shell
 $ az login
 ```
 
-Then make sure you are in Incremental mode
+You can use the `deploy.sh` script to publish the template. The script will prompt you for a resourceGroup, if the group 
+does not exit it will be created.
 
 ```shell
-$ az config mode Incremental
+$ ./deploy.sh
 ```
 
-Then create a resource group `<group>` in a `<location>` (e.g `centralus`) where we can deploy too
-
-```shell
-$ az group create <group> <location>
-```
-You will need to accept the `Legal Terms` of the offer before deploying the template. 
-
-```shell
-$ az vm image accept-terms --urn influxdata:influxdb-enterprise-vm:influxdb-enterprise-data-byol:1.7.90
-$ az vm image accept-terms --urn influxdata:influxdb-enterprise-vm:influxdb-enterprise-meta-byol:1.7.90
-```
-
-Next we can either use our published template directly using `--template-uri`
+After your initial creation, you can continue to publish Incremental deployments using of the following command below.
+Use our published template directly using `--template-uri`
 
 > az group deployment create --template-uri https://raw.githubusercontent.com/chobbs/ARM-Templates/master/src/mainTemplate.json --verbose --resource-group "${group}" --mode Incremental --parameters parameters/password.parameters.json
 
 or if your are executing commands from a clone of this repo using `--template-file`
-
-> $ az group deployment create --template-file src/mainTemplate.json --parameters parameters/password.parameters.json
 
 > az group deployment create --template-file src/mainTemplate.json --verbose --resource-group "${group}" --mode Incremental --parameters parameters/password.parameters.json
 
