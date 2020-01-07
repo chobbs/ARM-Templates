@@ -193,13 +193,13 @@
             "sku": "influxdb-enterprise-data-byol",
             "version": "latest"
           },
-          "osDisk": {
-            "name": "[concat(parameters('namespace'), 'vm', copyindex(), '-osdisk')]",
-          "managedDisk": {
-            "storageAccountType": "Standard_LRS"
-          },
-          "caching": "ReadWrite",
-          "createOption": "FromImage"
+            "osDisk": {
+              "name": "[concat('datanode-', 'vm', copyindex(), '-osdisk')]",
+              "createOption": "FromImage",
+              "diskSizeGB": 32,
+              "managedDisk": {
+                "storageAccountType": "Standard_LRS"
+            }
           },
           "dataDisks": [
           {
@@ -209,7 +209,7 @@
             "caching": "None",
             "createOption": "Empty",
             "managedDisk": {
-            "storageAccountType": "[parameters('storageSettings').accountType]"
+              "storageAccountType": "[parameters('storageSettings').accountType]"
               }
             }
           ]
