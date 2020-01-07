@@ -198,7 +198,7 @@
           {
             "lun": 0,
             "diskSizeGB": 32,
-            "name": "[concat(parameters('namespace'),'datadisk')]",
+            "name": "[concat(parameters('namespace'),'datadisk', copyindex())]",
             "caching": "None",
             "createOption": "Empty",
             "managedDisk": {

@@ -168,9 +168,10 @@
             "version": "latest"
           },
           "osDisk": {
-          "createOption": "FromImage",
-          "diskSizeGB": 30,
-          "managedDisk": {
+            "name": "[concat('meta-node-','osdisk')]",
+            "createOption": "FromImage",
+            "diskSizeGB": 32,
+            "managedDisk": {
             "storageAccountType": "Standard_LRS"
           },
             "osType": "Linux"
