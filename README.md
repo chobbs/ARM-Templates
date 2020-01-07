@@ -4,13 +4,6 @@ __Note: These templates are still under active development. They are not recomme
 
 ## Publishing a new image
 
-### Generate a SAS
-
-A Shared Access Signature (SAS) URL is required by the Partner Portal to import a VHD ([official guide](https://docs.microsoft.com/en-us/azure/marketplace/cloud-partner-portal/virtual-machine/cpp-get-sas-uri)).
-Packer is used to build the images and will only create managed disks.
-In order to create the SAS URL, the underlying VHD of the managed disk needs to be extracted and put in a storage account.
-The  script that handles the steps in [this guide](https://docs.microsoft.com/en-us/azure/virtual-machines/scripts/virtual-machines-linux-cli-sample-copy-managed-disks-vhd) provides instructions on how to extract the VHD and create the SAS URL.
-
 This repository consists of:
 
 * [src/mainTemplate.json](src/mainTemplate.json) - Entry Azure Resource Management (ARM) template.
