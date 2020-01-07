@@ -31,8 +31,8 @@ does not exit it will be created.
 $ ./deploy.sh
 ```
 
-After your initial creation, you can continue to publish Incremental deployments using of the following command below.
-Use our published template directly using `--template-uri`
+After you're initial deployment, you can continue to publish Incremental deployments using one of the following commands.
+You can published this repo template directly using `--template-uri`
 
 > az group deployment create --template-uri https://raw.githubusercontent.com/chobbs/ARM-Templates/master/src/mainTemplate.json --verbose --resource-group "${group}" --mode Incremental --parameters parameters/password.parameters.json
 
@@ -40,7 +40,7 @@ or if your are executing commands from a clone of this repo using `--template-fi
 
 > az group deployment create --template-file src/mainTemplate.json --verbose --resource-group "${group}" --mode Incremental --parameters parameters/password.parameters.json
 
-`<group>` in these last two examples refers to the resource group you just created.
+`<group>` in these last two examples refers to the resource group created by the deploy.sh script.
 
 **NOTE**
 
