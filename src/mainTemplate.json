@@ -116,7 +116,7 @@
         "Standard_DS2",
         "Standard_DS3",
         "Standard_DS4",
-        "Standard_DS13"
+        "Standard_DS1_v2"
       ],
       "metadata": {
         "description": "Size of the InfluxEnterprise meta nodes, 3 of these will be provisioned"
