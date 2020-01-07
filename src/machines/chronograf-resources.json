@@ -187,9 +187,11 @@
             "sku": "18.04-LTS",
             "version": "latest"
           },
-          "osDisk": {
-          "createOption": "FromImage",
-          "managedDisk": {
+           "osDisk": {
+            "name": "[concat('chronograf-', 'vm', copyindex(), '-osdisk')]",
+            "createOption": "FromImage",
+            "diskSizeGB": 32,
+            "managedDisk": {
             "storageAccountType": "Standard_LRS"
           },
             "osType": "Linux"

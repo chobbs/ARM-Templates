@@ -162,8 +162,10 @@
             "version": "latest"
           },
           "osDisk": {
-          "createOption": "FromImage",
-          "managedDisk": {
+            "name": "[concat('jumpbox-', 'vm', copyindex(), '-osdisk')]",
+            "createOption": "FromImage",
+            "diskSizeGB": 32,
+            "managedDisk": {
             "storageAccountType": "Standard_LRS"
           },
             "osType": "Linux"
