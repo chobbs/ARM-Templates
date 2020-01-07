@@ -169,6 +169,7 @@
           },
           "osDisk": {
           "createOption": "FromImage",
+          "diskSizeGB": 30,
           "managedDisk": {
             "storageAccountType": "Standard_LRS"
           },

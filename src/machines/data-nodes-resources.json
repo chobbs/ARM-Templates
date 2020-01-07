@@ -67,13 +67,6 @@
         "description": "OS settings to deploy on"
       }
     },
-    "dataDiskSize": {
-      "type": "int",
-      "defaultValue": 1023,
-      "metadata": {
-        "description": "Size of each data disk attached to data nodes in (Gb)"
-      }
-    },
     "namespace": {
       "type": "string",
       "defaultValue": "data-node-",
@@ -194,12 +187,25 @@
             "version": "latest"
           },
           "osDisk": {
-          "createOption": "FromImage",
+            "name": "[concat(parameters('namespace'),'osdisk')]",
           "managedDisk": {
-            "storageAccountType": "[parameters('storageSettings').accountType]"
+            "storageAccountType": "Standard_LRS"
           },
-            "osType": "Linux"
-          }
+          "caching": "ReadWrite",
+          "createOption": "FromImage"
+          },
+          "dataDisks": [
+          {
+            "lun": 0,
+            "writeAcceleratorEnabled": true,
+            "name": "[concat(parameters('namespace'),'datadisk')]",
+            "caching": "None",
+            "createOption": "FromImage",
+            "managedDisk": {
+            "storageAccountType": "[parameters('storageSettings').accountType]"
+              }
+            }
+          ]
         },
         "networkProfile": {
           "networkInterfaces": [

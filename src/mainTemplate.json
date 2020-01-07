@@ -107,7 +107,7 @@
         "description": "Size of the InfluxEnterprise meta nodes, 3 of these will be provisioned"
       }
     },
-      "vmClientNodeCount": {
+    "vmClientNodeCount": {
       "type": "int",
       "defaultValue": 0,
       "metadata": {
