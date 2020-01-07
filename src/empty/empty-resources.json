@@ -24,11 +24,11 @@
     },
     "password": {
       "type": "object",
-      "defaultValue": ""
+      "defaultValue": {}
     },
     "influxTags": {
       "type": "object",
-      "defaultValue": ""
+      "defaultValue": {}
     },
     "osSettings": {
       "type": "object",
