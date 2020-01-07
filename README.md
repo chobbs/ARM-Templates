@@ -40,11 +40,10 @@ The output from the market place UI is fed directly to the ARM template. You can
     </td></tr>
 
   <tr><td>vmDataNodeDiskSize</td><td>string</td>
-    <td>The disk size of each attached disk. Choose <code>32TiB</code>, <code>16TiB</code>, <code>8TiB</code>, <code>4TiB</code>, <code>2TiB</code>, <code>1TiB</code>, <code>512GiB</code>, <code>256GiB</code>, <code>128GiB</code>, <code>64GiB</code> or <code>32GiB</code>.
+    <td>The disk size of each attached disk. Choose <code>1TiB</code>, <code>512GiB</code>, <code>256GiB</code>, <code>128GiB</code>, <code>64GiB</code> or <code>32GiB</code>.
     For Premium Storage, disk sizes equate to <a href="https://docs.microsoft.com/en-us/azure/storage/storage-premium-storage#premium-storage-disks-limits">P80, P70, P60, P50, P40, P30, P20, P15, P10 and P6</a>
     storage disk types, respectively.
     </td>
-  </td><td><code>1TiB</code></td></tr>
 
   <tr><td>adminUsername</td><td>string</td>
     <td>Admin username used when provisioning virtual machines
@@ -53,7 +52,7 @@ The output from the market place UI is fed directly to the ARM template. You can
   <tr><td>password</td><td>object</td>
     <td>Password is a complex object parameter, we support both authenticating through username/pass or ssh keys. See the <a href="https://github.com/Mpdreamz/ARM-Templates/tree/master/parameters"> parameters example folder</a> for an example of what to pass for either option.
     </td></tr>
-    
+
   <tr><td>location</td><td>string</td>
     <td>The location where to provision all the items in this template. Defaults to the special <code>ResourceGroup</code> value which means it will inherit the location
     from the resource group see <a href="https://github.com/Mpdreamz/ARM-Templates/blob/master/src/mainTemplate.json#L197">this list for supported locations</a>.
