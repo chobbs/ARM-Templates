@@ -61,6 +61,13 @@
         "description": "Number of InfluxEnterpirse data nodes"
       }
     },
+    "dataDiskSize": {
+      "type": "int",
+      "defaultValue": 32,
+      "metadata": {
+        "description": "Size of each data disk attached to data nodes in (Gb)"
+      }
+    },
     "osSettings": {
       "type": "object",
       "metadata": {
@@ -197,7 +204,7 @@
           "dataDisks": [
           {
             "lun": 0,
-            "diskSizeGB": 32,
+            "diskSizeGB": "[parameters('storageSettings').diskSize]",
             "name": "[concat(parameters('namespace'), 'vm', copyindex(), '-datadisk')]",
             "caching": "None",
             "createOption": "Empty",
