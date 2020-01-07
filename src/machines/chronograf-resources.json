@@ -188,7 +188,7 @@
             "version": "latest"
           },
            "osDisk": {
-            "name": "[concat('chronograf-', 'vm', copyindex(), '-osdisk')]",
+            "name": "[concat('chronograf-', 'vm', '-osdisk')]",
             "createOption": "FromImage",
             "diskSizeGB": 32,
             "managedDisk": {
