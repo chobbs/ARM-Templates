@@ -386,7 +386,7 @@
   },
   "resources": [
     {
-      "name": "meta-nodes",
+      "name": "metanodes",
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2019-05-01",
       "dependsOn": [
@@ -459,7 +459,7 @@
       }
     },
     {
-      "name": "data-nodes",
+      "name": "datanodes",
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2019-05-01",
       "dependsOn": [
@@ -500,7 +500,7 @@
             "value": "[parameters('vmDataNodeCount')]"
           },
           "namespace": {
-            "value": "data-node-"
+            "value": "datanode-"
           },
           "osSettings": {
             "value": "[variables('osSettings')]"
@@ -551,7 +551,7 @@
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2019-05-01",
       "dependsOn": [
-        "[concat('Microsoft.Resources/deployments/', 'data-nodes')]"
+        "[concat('Microsoft.Resources/deployments/', 'datanodes')]"
       ],
       "properties": {
         "mode": "Incremental",

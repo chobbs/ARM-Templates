@@ -125,7 +125,7 @@
             "value": "[parameters('password')]"
           },
           "computerName": {
-            "value": "[concat('meta-node-', 'vm', copyindex())]"
+            "value": "[concat('metanode-', 'vm', copyindex())]"
           }
         }
       }
@@ -133,7 +133,7 @@
     {
       "apiVersion": "2019-03-01",
       "type": "Microsoft.Compute/virtualMachines",
-      "name": "[concat('meta-node-', 'vm', copyindex())]",
+      "name": "[concat('metanode-', 'vm', copyindex())]",
       "location": "[parameters('location')]",
       "tags": {
         "provider": "[toUpper(parameters('influxTags').provider)]"
@@ -168,7 +168,7 @@
             "version": "latest"
           },
           "osDisk": {
-            "name": "[concat('meta-node-','osdisk')]",
+            "name": "[concat('metanode-','osdisk')]",
             "createOption": "FromImage",
             "diskSizeGB": 32,
             "managedDisk": {
