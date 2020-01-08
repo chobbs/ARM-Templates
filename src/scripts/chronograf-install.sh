@@ -1,36 +1,30 @@
 #!/bin/bash
 
-# License: https://github.com/influxdata/azure-resource-manager-influxdb-enterprise/blob/master/LICENSE.txt
+# License: https://github.com/influxdata/azure-resource-manager-influxdb-enterprise/blob/master/LICENSE
 #
-# Craig Hobbs, InfluxData Inc.
+# Install Chronorgaf InfluxEnterprise ARM template cluster
 # Initial Version
 #
 
 #########################
-# HELP
+# Logging
 #########################
-
-help()
-{
-    echo "This script installs Chronograf on a dedicated VM in the InfluxEnterprise ARM template cluster"
-    echo ""
-    echo " -h      view this help content"
-}
 
 # Custom logging with time so we can easily relate running times, also log to separate file so order is guaranteed.
 # The Script extension output the stdout/err buffer in intervals with duplicates.
+
 log()
 {
 
      echo \[$(date +%d%m%Y-%H:%M:%S)\] "$1"
-     echo \[$(date +%d%m%Y-%H:%M:%S)\] "$1" >> /var/log/arm-install.log
+     echo \[$(date +%d%m%Y-%H:%M:%S)\] "$1" >> /var/log/chronograf-install.log
 }
 
 log "Begin execution of Chronograf script extension on ${HOSTNAME}"
 START_TIME=$SECONDS
 
 #########################
-# Preconditions
+# Check user access
 #########################
 
 if [ "${UID}" -ne 0 ];
@@ -48,7 +42,7 @@ fi
 CHRONOGRAF_VERSION="1.7.16"
 
 #########################
-# Installation steps as functions
+# Installation steps
 #########################
 
 random_password()
