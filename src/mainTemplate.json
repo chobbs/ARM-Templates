@@ -186,8 +186,7 @@
     "commonInstallParams": "[parameters('vmDataNodeCount')]",
     "ubuntuScripts": [
       "[concat(parameters('_artifactsLocation'), 'scripts/datanodes-configure.sh')]",
-      "[concat(parameters('_artifactsLocation'), 'scripts/chronograf-install.sh')]",
-      "https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/shared_scripts/ubuntu/vm-disk-utils-0.1.sh"
+      "[concat(parameters('_artifactsLocation'), 'scripts/chronograf-install.sh')]"
     ],
     "clusterScripts": [
       "[uri(parameters('_artifactsLocation'), 'scripts/datanodes-configure.sh')]"
@@ -223,8 +222,10 @@
           "typeHandlerVersion": "2.0",
           "autoUpgradeMinorVersion": true,
           "settings": {
-            "fileUris": "[variables('ubuntuScripts')]",
-            "commandToExecute": "bash chronograf-install.sh"
+            "fileUris": [
+              "[concat(parameters('_artifactsLocation'), '/scripts/chronograf-install.sh')]"
+                    ],
+                "commandToExecute": "bash chronograf-install.sh"
           }
         }
       }
