@@ -222,7 +222,7 @@
           "typeHandlerVersion": "1.2",
           "settings": {
             "fileUris": "[concat(parameters('_artifactsLocation'), '/scripts/chronograf-install.sh')]",
-              "commandToExecute": "sudo bash chronograf-install.sh"
+              "commandToExecute": "bash chronograf-install.sh"
           }
         }
       }
