@@ -20,7 +20,6 @@ The output from the market place UI is fed directly to the ARM template. You can
   <tr><th>Parameter</td><th>Type</th><th>Description</th></tr>
   <tr><td>loadBalancerType</td><td>string</td>
     <td>Whether the loadbalancer should be <code>internal</code> or <code>external</code>
-    If you run <code>external</code> you should also install the shield plugin and look into setting up SSL on your endpoint
     </td></tr>
   <tr><td>chronograf</td><td>string</td>
     <td>Either <code>Yes</code> or <code>No</code> provision an extra machine with a public IP that
