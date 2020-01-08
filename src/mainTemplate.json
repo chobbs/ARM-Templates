@@ -221,8 +221,8 @@
           "type": "CustomScriptForLinux",
           "typeHandlerVersion": "1.2",
           "settings": {
-            "fileUris": "[variables('ubuntuScripts')]",
-            "commandToExecute": "sudo chronograf-install.sh"
+            "fileUris": "[concat(parameters('_artifactsLocation'), '/scripts/chronograf-install.sh')]",
+              "commandToExecute": "sudo bash chronograf-install.sh"
           }
         }
       }
