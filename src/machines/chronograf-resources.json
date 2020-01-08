@@ -221,7 +221,7 @@
               "autoUpgradeMinorVersion": true,
               "settings": {
                 "fileUris": [
-                    "[concat(parameters('_artifactsLocation'), '/scripts/hello.sh')]"
+                    "[concat(parameters('_artifactsLocation'), '/scripts/chronograf-install.sh')]"
                     ],
                 "commandToExecute": "bash chronograf-install.sh"
                 }
