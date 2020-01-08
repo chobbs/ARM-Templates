@@ -217,12 +217,15 @@
           }
         },
         "chronograf": {
-          "publisher": "Microsoft.OSTCExtensions",
-          "type": "CustomScriptForLinux",
-          "typeHandlerVersion": "1.2",
+          "publisher": "Microsoft.Azure.Extensions",
+          "type": "CustomScript",
+          "typeHandlerVersion": "2.0",
+          "autoUpgradeMinorVersion": true,
           "settings": {
-            "fileUris": "[concat(parameters('_artifactsLocation'), '/scripts/chronograf-install.sh')]",
-              "commandToExecute": "bash chronograf-install.sh"
+            "fileUris": [
+              "[concat(parameters('_artifactsLocation'), '/scripts/chronograf-install.sh')]"
+                    ],
+                "commandToExecute": "bash chronograf-install.sh"
           }
         }
       }
