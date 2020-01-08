@@ -216,7 +216,7 @@
             "fileUris": "[variables('clusterScripts')]"
           }
         },
-        "kibana": {
+        "chronograf": {
           "publisher": "Microsoft.OSTCExtensions",
           "type": "CustomScriptForLinux",
           "typeHandlerVersion": "1.2",

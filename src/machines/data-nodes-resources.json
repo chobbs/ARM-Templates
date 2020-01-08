@@ -89,6 +89,7 @@
     }
   },
   "variables": {
+    "vmName": "[concat(parameters('namespace'), '-vm')]",
     "subnetRef": "[concat(resourceId('Microsoft.Network/virtualNetworks', parameters('subnet').vnet), '/subnets/', parameters('subnet').name)]"
   },
   "resources": [
