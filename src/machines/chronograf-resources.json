@@ -208,7 +208,7 @@
         "resources": [
           {
             "type": "Microsoft.Compute/virtualMachines/extensions",
-            "name": "[concat(variables('vmName'), '/installkibana')]",
+            "name": "[concat(variables('vmName'), '/installchronograf')]",
             "apiVersion": "2019-03-01",
             "location": "[parameters('location')]",
             "dependsOn": [

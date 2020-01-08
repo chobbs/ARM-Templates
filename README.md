@@ -24,7 +24,7 @@ The output from the market place UI is fed directly to the ARM template. You can
     </td></tr>
   <tr><td>chronograf</td><td>string</td>
     <td>Either <code>Yes</code> or <code>No</code> provision an extra machine with a public IP that
-    has Kibana installed on it. If you have opted to also install the Elasticsearch plugins using <code>esPlugins</code> then the Marvel and Sense Kibana apps get installed as well.
+    has Chronograf installed on it.
     </td></tr>
 
   <tr><td>jumpbox</td><td>string</td>
