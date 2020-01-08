@@ -188,7 +188,7 @@
             "version": "latest"
           },
            "osDisk": {
-            "name": "[concat('chronograf-', 'vm', '-osdisk')]",
+            "name": "[concat(variables('vmName'), '-osdisk')]",
             "createOption": "FromImage",
             "diskSizeGB": 32,
             "managedDisk": {
@@ -204,7 +204,19 @@
             }
           ]
         }
-      }
+      },
+        "resources": [
+          {
+            "type": "Microsoft.Compute/virtualMachines/extensions",
+            "name": "[concat(variables('vmName'), '/installkibana')]",
+            "apiVersion": "2019-03-01",
+            "location": "[parameters('location')]",
+            "dependsOn": [
+              "[concat('Microsoft.Compute/virtualMachines/', variables('vmName'))]"
+          ],
+          "properties": "[parameters('osSettings').extentionSettings.chronograf]"
+        }
+      ]
     }
   ],
   "outputs": {}

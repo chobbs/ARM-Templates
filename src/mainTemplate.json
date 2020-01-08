@@ -184,10 +184,13 @@
     },
     "chronografTemplateUrl": "[uri(parameters('_artifactsLocation'), variables('chronografTemplates')[parameters('chronograf')])]",
     "commonInstallParams": "[parameters('vmDataNodeCount')]",
+    "ubuntuScripts": [
+      "[uri(parameters('_artifactsLocation'), 'scripts/datanodes-configure.sh')]",
+      "[uri(parameters('_artifactsLocation'), 'scripts/chronograf-install.sh')]"
+    ],
     "clusterScripts": [
       "[uri(parameters('_artifactsLocation'), 'scripts/datanodes-configure.sh')]"
     ],
-    "clientInstallScript": "[concat('bash datanodes-configure.sh -y',  variables('commonInstallParams'))]",
     "ubuntuSettings": {
       "imageReference": {
         "publisher": "Canonical",
@@ -211,6 +214,15 @@
           "typeHandlerVersion": "1.0",
           "settings": {
             "fileUris": "[variables('clusterScripts')]"
+          }
+        },
+        "kibana": {
+          "publisher": "Microsoft.OSTCExtensions",
+          "type": "CustomScriptForLinux",
+          "typeHandlerVersion": "1.2",
+          "settings": {
+            "fileUris": "[variables('ubuntuScripts')]",
+            "commandToExecute": "sudo chronograf-install.sh"
           }
         }
       }
