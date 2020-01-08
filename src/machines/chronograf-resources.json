@@ -208,14 +208,25 @@
         "resources": [
           {
             "type": "Microsoft.Compute/virtualMachines/extensions",
-            "name": "[concat(variables('vmName'), '/installChronograf')]",
+            "name": "[concat(variables('vmName'),'/installcustomscript')]",
             "apiVersion": "2015-05-01-preview",
             "location": "[parameters('location')]",
             "dependsOn": [
               "[concat('Microsoft.Compute/virtualMachines/', variables('vmName'))]"
-          ],
-           "properties": "[parameters('osSettings').extentionSettings.chronograf]"
-        }
+              ],
+            "properties": {
+              "publisher": "Microsoft.Azure.Extensions",
+              "type": "CustomScript",
+              "typeHandlerVersion": "2.0",
+              "autoUpgradeMinorVersion": true,
+              "settings": {
+                "fileUris": [
+                    "[concat(parameters('_artifactsLocation'), '/scripts/hello.sh')]"
+                    ],
+                "commandToExecute": "bash chronograf-install.sh"
+                }
+            }
+          }
       ]
     }
   ],
