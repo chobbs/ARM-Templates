@@ -91,7 +91,7 @@
     },
     "vmSizeMetaNodes": {
       "type": "string",
-      "defaultValue": "Standard_D1_v2",
+      "defaultValue": " ",
       "allowedValues": [
         "Standard_D1_v2",
         "Standard_D2_v2"
@@ -166,9 +166,6 @@
       "[concat(parameters('_artifactsLocation'), 'scripts/datanodes-configure.sh')]",
       "[concat(parameters('_artifactsLocation'), 'scripts/chronograf-install.sh')]"
     ],
-    "clusterScripts": [
-      "[uri(parameters('_artifactsLocation'), 'scripts/datanodes-configure.sh')]"
-    ],
     "ubuntuSettings": {
       "imageReference": {
         "publisher": "Canonical",
@@ -179,17 +176,19 @@
       "managementPort": "22",
       "extentionSettings": {
         "meta": {
-          "publisher": "Microsoft.OSTCExtensions",
-          "type": "CustomScriptForLinux",
-          "typeHandlerVersion": "1.0",
+          "publisher": "Microsoft.Azure.Extensions",
+          "type": "CustomScript",
+          "typeHandlerVersion": "2.0",
+          "autoUpgradeMinorVersion": true,
           "settings": {
             "fileUris": "[variables('ubuntuScripts')]"
           }
         },
         "data": {
-          "publisher": "Microsoft.OSTCExtensions",
-          "type": "CustomScriptForLinux",
-          "typeHandlerVersion": "1.0",
+          "publisher": "Microsoft.Azure.Extensions",
+          "type": "CustomScript",
+          "typeHandlerVersion": "2.0",
+          "autoUpgradeMinorVersion": true,
           "settings": {
             "fileUris": "[variables('ubuntuScripts')]"
           }
@@ -224,8 +223,6 @@
       "northeurope": "[parameters('location')]"
     },
     "location": "[variables('locationMap')[parameters('location')]]",
-    "storageAccountPrefix": "influxdb",
-    "storageAccountNameShared": "[concat(variables('storageAccountPrefix'), 's', uniqueString(resourceGroup().id, deployment().name))]",
     "metaNodesIpPrefix": "10.0.0.1",
     "networkSettings": {
       "virtualNetworkName": "[parameters('virtualNetworkName')]",
@@ -314,65 +311,9 @@
       "512GiB": 512,
       "1TiB": 1024
     },
-    "nodesPerStorageAccount": "[variables('dataSkuSettings')[parameters('vmSizeDataNodes')].nodesPerStorageAccount]",
-    "storageBinPackMap": [
-      "[div(sub(add(1, variables('nodesPerStorageAccount')), 1), variables('nodesPerStorageAccount'))]",
-      "[div(sub(add(2, variables('nodesPerStorageAccount')), 1), variables('nodesPerStorageAccount'))]",
-      "[div(sub(add(3, variables('nodesPerStorageAccount')), 1), variables('nodesPerStorageAccount'))]",
-      "[div(sub(add(4, variables('nodesPerStorageAccount')), 1), variables('nodesPerStorageAccount'))]",
-      "[div(sub(add(5, variables('nodesPerStorageAccount')), 1), variables('nodesPerStorageAccount'))]",
-      "[div(sub(add(6, variables('nodesPerStorageAccount')), 1), variables('nodesPerStorageAccount'))]",
-      "[div(sub(add(7, variables('nodesPerStorageAccount')), 1), variables('nodesPerStorageAccount'))]",
-      "[div(sub(add(8, variables('nodesPerStorageAccount')), 1), variables('nodesPerStorageAccount'))]",
-      "[div(sub(add(9, variables('nodesPerStorageAccount')), 1), variables('nodesPerStorageAccount'))]",
-      "[div(sub(add(10, variables('nodesPerStorageAccount')), 1), variables('nodesPerStorageAccount'))]",
-      "[div(sub(add(11, variables('nodesPerStorageAccount')), 1), variables('nodesPerStorageAccount'))]",
-      "[div(sub(add(12, variables('nodesPerStorageAccount')), 1), variables('nodesPerStorageAccount'))]",
-      "[div(sub(add(13, variables('nodesPerStorageAccount')), 1), variables('nodesPerStorageAccount'))]",
-      "[div(sub(add(14, variables('nodesPerStorageAccount')), 1), variables('nodesPerStorageAccount'))]",
-      "[div(sub(add(15, variables('nodesPerStorageAccount')), 1), variables('nodesPerStorageAccount'))]",
-      "[div(sub(add(16, variables('nodesPerStorageAccount')), 1), variables('nodesPerStorageAccount'))]",
-      "[div(sub(add(17, variables('nodesPerStorageAccount')), 1), variables('nodesPerStorageAccount'))]",
-      "[div(sub(add(18, variables('nodesPerStorageAccount')), 1), variables('nodesPerStorageAccount'))]",
-      "[div(sub(add(19, variables('nodesPerStorageAccount')), 1), variables('nodesPerStorageAccount'))]",
-      "[div(sub(add(20, variables('nodesPerStorageAccount')), 1), variables('nodesPerStorageAccount'))]",
-      "[div(sub(add(21, variables('nodesPerStorageAccount')), 1), variables('nodesPerStorageAccount'))]",
-      "[div(sub(add(22, variables('nodesPerStorageAccount')), 1), variables('nodesPerStorageAccount'))]",
-      "[div(sub(add(23, variables('nodesPerStorageAccount')), 1), variables('nodesPerStorageAccount'))]",
-      "[div(sub(add(24, variables('nodesPerStorageAccount')), 1), variables('nodesPerStorageAccount'))]",
-      "[div(sub(add(25, variables('nodesPerStorageAccount')), 1), variables('nodesPerStorageAccount'))]",
-      "[div(sub(add(26, variables('nodesPerStorageAccount')), 1), variables('nodesPerStorageAccount'))]",
-      "[div(sub(add(27, variables('nodesPerStorageAccount')), 1), variables('nodesPerStorageAccount'))]",
-      "[div(sub(add(28, variables('nodesPerStorageAccount')), 1), variables('nodesPerStorageAccount'))]",
-      "[div(sub(add(29, variables('nodesPerStorageAccount')), 1), variables('nodesPerStorageAccount'))]",
-      "[div(sub(add(30, variables('nodesPerStorageAccount')), 1), variables('nodesPerStorageAccount'))]",
-      "[div(sub(add(31, variables('nodesPerStorageAccount')), 1), variables('nodesPerStorageAccount'))]",
-      "[div(sub(add(32, variables('nodesPerStorageAccount')), 1), variables('nodesPerStorageAccount'))]",
-      "[div(sub(add(33, variables('nodesPerStorageAccount')), 1), variables('nodesPerStorageAccount'))]",
-      "[div(sub(add(34, variables('nodesPerStorageAccount')), 1), variables('nodesPerStorageAccount'))]",
-      "[div(sub(add(35, variables('nodesPerStorageAccount')), 1), variables('nodesPerStorageAccount'))]",
-      "[div(sub(add(36, variables('nodesPerStorageAccount')), 1), variables('nodesPerStorageAccount'))]",
-      "[div(sub(add(37, variables('nodesPerStorageAccount')), 1), variables('nodesPerStorageAccount'))]",
-      "[div(sub(add(38, variables('nodesPerStorageAccount')), 1), variables('nodesPerStorageAccount'))]",
-      "[div(sub(add(39, variables('nodesPerStorageAccount')), 1), variables('nodesPerStorageAccount'))]",
-      "[div(sub(add(40, variables('nodesPerStorageAccount')), 1), variables('nodesPerStorageAccount'))]",
-      "[div(sub(add(51, variables('nodesPerStorageAccount')), 1), variables('nodesPerStorageAccount'))]",
-      "[div(sub(add(52, variables('nodesPerStorageAccount')), 1), variables('nodesPerStorageAccount'))]",
-      "[div(sub(add(53, variables('nodesPerStorageAccount')), 1), variables('nodesPerStorageAccount'))]",
-      "[div(sub(add(54, variables('nodesPerStorageAccount')), 1), variables('nodesPerStorageAccount'))]",
-      "[div(sub(add(55, variables('nodesPerStorageAccount')), 1), variables('nodesPerStorageAccount'))]",
-      "[div(sub(add(56, variables('nodesPerStorageAccount')), 1), variables('nodesPerStorageAccount'))]",
-      "[div(sub(add(57, variables('nodesPerStorageAccount')), 1), variables('nodesPerStorageAccount'))]",
-      "[div(sub(add(58, variables('nodesPerStorageAccount')), 1), variables('nodesPerStorageAccount'))]",
-      "[div(sub(add(59, variables('nodesPerStorageAccount')), 1), variables('nodesPerStorageAccount'))]",
-      "[div(sub(add(60, variables('nodesPerStorageAccount')), 1), variables('nodesPerStorageAccount'))]"
-    ],
     "dataNodeStorageSettings": {
-      "count": "[div(sub(add(parameters('vmDataNodeCount'), variables('nodesPerStorageAccount')), 1), variables('nodesPerStorageAccount'))]",
-      "mapping": "[variables('storageBinPackMap')]",
       "accountType": "[variables('dataSkuSettings')[parameters('vmSizeDataNodes')].storageAccountType]",
-      "diskSize": "[variables('dataDiskSizes')[parameters('vmDataDiskSize')]]",
-      "prefix": "[concat(variables('storageAccountPrefix'), 'd', uniqueString(resourceGroup().id, deployment().name))]"
+      "diskSize": "[variables('dataDiskSizes')[parameters('vmDataDiskSize')]]"
     },
     "dataTemplateUrl": "[uri(parameters('_artifactsLocation'), 'machines/data-nodes-resources.json')]"
   },
@@ -437,9 +378,6 @@
           },
           "networkSettings": {
             "value": "[variables('networkSettings')]"
-          },
-          "storageAccountName": {
-            "value": "[variables('storageAccountNameShared')]"
           },
           "loadBalancerType": {
             "value": "[parameters('loadBalancerType')]"
