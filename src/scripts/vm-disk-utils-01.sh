@@ -1,3 +1,4 @@
+#!/bin/bash
 
 # The MIT License (MIT)
 #
@@ -33,6 +34,7 @@
 #  1 - b: The base directory for mount points (default: /datadisks)
 #  2 - s  Create a striped RAID0 Array (No redundancy)
 #  3 - h  Help
+#  4 - o  Mount options for mount points
 # Note :
 # This script has only been tested on Ubuntu 12.04 LTS and must be root
 
@@ -42,18 +44,17 @@ help()
     echo ""
     echo "Options:"
     echo "   -b         base directory for mount points (default: /datadisks)"
+    echo "   -h         this help message"
     echo "   -s         create a striped RAID array (no redundancy)"
     echo "   -o         mount options for data disk"
-    echo "   -h         this help message"
 }
 
 log()
 {
-    echo \[$(date +%d%m%Y-%H:%M:%S)\] \["format_and_partition_disks"\] "$1"
-    echo \[$(date +%d%m%Y-%H:%M:%S)\] \["format_and_partition_disks"\] "$1" >> /var/log/arm-install.log
+    # Un-comment the following if you would like to enable logging to a service
+    #curl -X POST -H "content-type:text/plain" --data-binary "${HOSTNAME} - $1" https://logs-01.loggly.com/inputs/<key>/tag/es-extension,${HOSTNAME}
+    echo "$1"
 }
-
-export DEBIAN_FRONTEND=noninteractive
 
 if [ "${UID}" -ne 0 ];
 then
@@ -66,14 +67,16 @@ fi
 DATA_BASE="/datadisks"
 # Mount options for data disk
 MOUNT_OPTIONS="noatime,nodiratime,nodev,noexec,nosuid,nofail"
+# Determines wheter partition and format data disks as raid set or not
+RAID_CONFIGURATION=0
 
 while getopts b:sho: optname; do
     log "Option $optname set with value ${OPTARG}"
   case ${optname} in
-    b)  #Set base path for data disks
+    b)  #set clsuter name
       DATA_BASE=${OPTARG}
       ;;
-    s)  #Partition and format data disks as raid set
+    s) #Partition and format data disks as raid set
       RAID_CONFIGURATION=1
       ;;
     o) #mount option
@@ -170,11 +173,10 @@ get_next_mountpoint() {
 add_to_fstab() {
     UUID=${1}
     MOUNTPOINT=${2}
-    log "calling fstab with UUID: ${UUID} and mount point: ${MOUNTPOINT}"
     grep "${UUID}" /etc/fstab >/dev/null 2>&1
     if [ ${?} -eq 0 ];
     then
-        log "Not adding ${UUID} to fstab again (it's already there!)"
+        echo "Not adding ${UUID} to fstab again (it's already there!)"
     else
         LINE="UUID=\"${UUID}\"\t${MOUNTPOINT}\text4\t${MOUNT_OPTIONS}\t1 2"
         echo -e "${LINE}" >> /etc/fstab
@@ -184,201 +186,136 @@ add_to_fstab() {
 do_partition() {
 # This function creates one (1) primary partition on the
 # disk, using all available space
-    local _disk=${1}
-    local largest_dos_volume_bytes=2199023255040
-    local disk_size=$(fdisk -l ${_disk} | grep -E -o ", [0-9]+ bytes," | grep -E -o "[0-9]+")
-
-    if [[ "${disk_size}" -gt "${largest_dos_volume_bytes}" ]]; then
-        log "create partition for ${_disk} with parted"
-        parted -s ${_disk} -- mklabel gpt mkpart primary 0% 100%
-        local EXIT_CODE=$?
-        if [[ $EXIT_CODE -ne 0 ]]; then
-            log "An error occurred partitioning ${_disk}"
-            echo "An error occurred partitioning ${_disk}" >&2
-            echo "I cannot continue" >&2
-            exit $EXIT_CODE
-        fi
-    else
-        log "create partition for ${_disk} with fdisk"
-        local _type=${2}
-        if [ -z "${_type}" ]; then
-            # default to Linux partition type (ie, ext3/ext4/xfs)
-            _type=83
-        fi
-
-        echo "n
+    _disk=${1}
+    _type=${2}
+    if [ -z "${_type}" ]; then
+        # default to Linux partition type (ie, ext3/ext4/xfs)
+        _type=83
+    fi
+    echo "n
 p
 1
 t
 ${_type}
 w"| fdisk "${_disk}"
 
-        # Use the bash-specific $PIPESTATUS to ensure we get the correct exit code
-        # from fdisk and not from echo
-        if [ ${PIPESTATUS[1]} -ne 0 ];
-        then
-            log "An error occurred partitioning ${_disk}"
-            echo "An error occurred partitioning ${_disk}" >&2
-            echo "I cannot continue" >&2
-            exit 2
-        fi
-    fi
+#
+# Use the bash-specific $PIPESTATUS to ensure we get the correct exit code
+# from fdisk and not from echo
+if [ ${PIPESTATUS[1]} -ne 0 ];
+then
+    echo "An error occurred partitioning ${_disk}" >&2
+    echo "I cannot continue" >&2
+    exit 2
+fi
 }
 #end do_partition
 
 scan_partition_format()
 {
-    DISKS=(${@})
-    log "Begin formatting data disks"
-    log "Disks are ${DISKS[*]}"
+    log "Begin scanning and formatting data disks"
 
-    for DISK in "${DISKS[@]}";
-    do
-        log "Working on ${DISK}"
-        is_partitioned ${DISK}
-        if [ ${?} -ne 0 ];
-        then
-            log "${DISK} is not partitioned, partitioning"
-            do_partition ${DISK}
-        fi
-        PARTITION=$(fdisk -l ${DISK}|grep -A 1 Device|tail -n 1|awk '{print $1}')
-        has_filesystem ${PARTITION}
-        if [ ${?} -ne 0 ];
-        then
-            log "Creating filesystem on ${PARTITION}."
-            # echo "Press Ctrl-C if you don't want to destroy all data on ${PARTITION}"
-            # sleep 10
-            mkfs -j -t ext4 ${PARTITION}
-        fi
-        MOUNTPOINT=$(get_next_mountpoint)
-        log "Next mount point appears to be ${MOUNTPOINT}"
-        [ -d "${MOUNTPOINT}" ] || mkdir -p "${MOUNTPOINT}"
-        read UUID FS_TYPE < <(blkid -u filesystem ${PARTITION}|awk -F "[= ]" '{print $3" "$5}'|tr -d "\"")
-        add_to_fstab "${UUID}" "${MOUNTPOINT}"
-        log "Mounting disk ${PARTITION} on ${MOUNTPOINT}"
-        mount "${MOUNTPOINT}"
-    done
+    DISKS=($(scan_for_new_disks))
+
+	if [ "${#DISKS}" -eq 0 ];
+	then
+	    log "No unpartitioned disks without filesystems detected"
+	    return
+	fi
+	echo "Disks are ${DISKS[@]}"
+	for DISK in "${DISKS[@]}";
+	do
+	    echo "Working on ${DISK}"
+	    is_partitioned ${DISK}
+	    if [ ${?} -ne 0 ];
+	    then
+	        echo "${DISK} is not partitioned, partitioning"
+	        do_partition ${DISK}
+	    fi
+	    PARTITION=$(fdisk -l ${DISK}|grep -A 1 Device|tail -n 1|awk '{print $1}')
+	    has_filesystem ${PARTITION}
+	    if [ ${?} -ne 0 ];
+	    then
+	        echo "Creating filesystem on ${PARTITION}."
+	#        echo "Press Ctrl-C if you don't want to destroy all data on ${PARTITION}"
+	#        sleep 10
+	        mkfs -j -t ext4 ${PARTITION}
+	    fi
+	    MOUNTPOINT=$(get_next_mountpoint)
+	    echo "Next mount point appears to be ${MOUNTPOINT}"
+	    [ -d "${MOUNTPOINT}" ] || mkdir -p "${MOUNTPOINT}"
+	    read UUID FS_TYPE < <(blkid -u filesystem ${PARTITION}|awk -F "[= ]" '{print $3" "$5}'|tr -d "\"")
+	    add_to_fstab "${UUID}" "${MOUNTPOINT}"
+	    echo "Mounting disk ${PARTITION} on ${MOUNTPOINT}"
+	    mount "${MOUNTPOINT}"
+	done
 }
 
 create_striped_volume()
 {
     DISKS=(${@})
-    log "Begin creating striped volume"
-    log "Disks are ${DISKS[*]}"
 
-    declare -a PARTITIONS
+	if [ "${#DISKS[@]}" -eq 0 ];
+	then
+	    log "No unpartitioned disks without filesystems detected"
+	    return
+	fi
 
-    for DISK in "${DISKS[@]}";
-    do
-        log "Working on ${DISK}"
-        is_partitioned ${DISK}
-        if [ ${?} -ne 0 ];
-        then
-            log "${DISK} is not partitioned, partitioning"
-            do_partition ${DISK} fd
-        fi
+	echo "Disks are ${DISKS[@]}"
 
-        PARTITION=$(fdisk -l ${DISK}|grep -A 2 Device|tail -n 1|awk '{print $1}')
-        PARTITIONS+=("${PARTITION}")
-    done
+	declare -a PARTITIONS
 
-    log "Using ${#PARTITIONS[@]} partitions ${PARTITIONS[*]}"
-    MOUNTPOINT=$(get_next_mountpoint)
-    STRIDE=128 #(512kB stripe size) / (4kB block size)
-    log "Next mount point appears to be ${MOUNTPOINT}"
-    [ -d "${MOUNTPOINT}" ] || mkdir -p "${MOUNTPOINT}"
+	for DISK in "${DISKS[@]}";
+	do
+	    echo "Working on ${DISK}"
+	    is_partitioned ${DISK}
+	    if [ ${?} -ne 0 ];
+	    then
+	        echo "${DISK} is not partitioned, partitioning"
+	        do_partition ${DISK} fd
+	    fi
 
-    MDDEVICE="${DISKS[0]}1"
-    if [ "${#DISKS[@]}" -eq 1 ];
-    then
-        log "only one disk (${DISKS[0]}) attached. mount it"
-        mkfs.ext4 -b 4096 -E stride=${STRIDE},nodiscard "${MDDEVICE}"
+	    PARTITION=$(fdisk -l ${DISK}|grep -A 2 Device|tail -n 1|awk '{print $1}')
+	    PARTITIONS+=("${PARTITION}")
+	done
 
-        log "attempting to get UUID from ${MDDEVICE}"
-        read UUID FS_TYPE < <(blkid -u filesystem ${MDDEVICE}|awk -F "[= ]" '{print $3" "$5}'|tr -d "\"")
+    MDDEVICE=$(get_next_md_device)
+	udevadm control --stop-exec-queue
+	mdadm --create ${MDDEVICE} --level 0 -c 64 --raid-devices ${#PARTITIONS[@]} ${PARTITIONS[*]}
+	udevadm control --start-exec-queue
 
-        log "adding UUID: ${UUID} to fstab ${MDDEVICE}"
-        add_to_fstab "${UUID}" "${MOUNTPOINT}"
+	MOUNTPOINT=$(get_next_mountpoint)
+	echo "Next mount point appears to be ${MOUNTPOINT}"
+	[ -d "${MOUNTPOINT}" ] || mkdir -p "${MOUNTPOINT}"
 
-        mount "${MOUNTPOINT}"
-    else
-        log "${#DISKS[@]} disks are attached. RAID0-ing them using mdadm"
-        MDDEVICE=$(get_next_md_device)
-        log "Next md device is ${MDDEVICE}"
-        udevadm control --stop-exec-queue
-        mdadm --create ${MDDEVICE} --level=0 -c 64 --raid-devices=${#PARTITIONS[@]} ${PARTITIONS[*]}
-        udevadm control --start-exec-queue
+	#Make a file system on the new device
+	STRIDE=128 #(512kB stripe size) / (4kB block size)
+	PARTITIONSNUM=${#PARTITIONS[@]}
+	STRIPEWIDTH=$((${STRIDE} * ${PARTITIONSNUM}))
 
-        #Make a file system on the new device
-        PARTITIONSNUM=${#PARTITIONS[@]}
-        STRIPEWIDTH=$((${STRIDE} * ${PARTITIONSNUM}))
-        mkfs.ext4 -b 4096 -E stride=${STRIDE},stripe-width=${STRIPEWIDTH},nodiscard "${MDDEVICE}"
+	mkfs.ext4 -b 4096 -E stride=${STRIDE},stripe-width=${STRIPEWIDTH},nodiscard "${MDDEVICE}"
 
-        log "attempting to get UUID from ${MDDEVICE}"
-        read UUID FS_TYPE < <(blkid -u filesystem ${MDDEVICE}|awk -F "[= ]" '{print $3" "$5}'|tr -d "\"")
+	read UUID FS_TYPE < <(blkid -u filesystem ${MDDEVICE}|awk -F "[= ]" '{print $3" "$5}'|tr -d "\"")
 
-        if [[ -z "$UUID" && "${#DISKS[@]}" -ne 1 ]]; then
-            log "UUID is empty. checking state of ${MDDEVICE}"
+	add_to_fstab "${UUID}" "${MOUNTPOINT}"
 
-            # check if disk is inactive and spare. if it is, stop and assemble
-            if grep -q "$(basename ${MDDEVICE}) : inactive" /proc/mdstat; then
-              log "${MDDEVICE} is inactive, stopping and assembling"
-              mdadm --stop "${MDDEVICE}"
-              mdadm --assemble --scan
-              log "${MDDEVICE} stopped and assembled"
-            fi
-
-            log "checking state of ${MDDEVICE}"
-            if ! grep -q "$(basename ${MDDEVICE}) : active raid0" /proc/mdstat; then
-              log "${MDDEVICE} not active. exiting"
-              exit 4
-            fi
-
-            log "${MDDEVICE} is active"
-            mkfs.ext4 -b 4096 -E stride=${STRIDE},stripe-width=${STRIPEWIDTH},nodiscard "${MDDEVICE}"
-
-            log "attempting to get UUID from ${MDDEVICE} again"
-            read UUID FS_TYPE < <(blkid -u filesystem ${MDDEVICE}|awk -F "[= ]" '{print $3" "$5}'|tr -d "\"")
-
-            if [[ -z "$UUID" ]]; then
-              log "UUID is still empty. exiting"
-              exit 4
-            fi
-        fi
-
-        log "adding UUID: ${UUID} to fstab ${MDDEVICE}"
-        add_to_fstab "${UUID}" "${MOUNTPOINT}"
-
-        mount "${MOUNTPOINT}"
-
-        log "add entry to  /etc/mdadm/mdadm.conf for RAID array"
-        mdadm --detail --scan | tee -a /etc/mdadm/mdadm.conf
-        log "update update-initramfs"
-        update-initramfs -u
-    fi
+	mount "${MOUNTPOINT}"
 }
 
 check_mdadm() {
-  log "installing or updating mdadm"
-  (apt-get -y update || (sleep 15; apt-get -y update)) > /dev/null
-  log "apt-get updated installing mdadm now"
-  (apt-get -yq install mdadm || (sleep 15; apt-get -yq install mdadm))
-  dpkg -s mdadm >/dev/null 2>&1
-  log "apt-get installed mdadm and can be found returns: ${?}"
+    dpkg -s mdadm >/dev/null 2>&1
+    if [ ${?} -ne 0 ]; then
+        (apt-get -y update || (sleep 15; apt-get -y update)) > /dev/null
+        DEBIAN_FRONTEND=noninteractive apt-get -y install mdadm --fix-missing
+    fi
 }
 
 # Create Partitions
-DISKS=($(scan_for_new_disks))
-
-if [ "${#DISKS[@]}" -eq 0 ];
-then
-    log "No unpartitioned disks without filesystems detected"
-    exit 0
-fi
+DISKS=$(scan_for_new_disks)
 
 if [ "$RAID_CONFIGURATION" -eq 1 ]; then
     check_mdadm
     create_striped_volume "${DISKS[@]}"
 else
-    scan_partition_format "${DISKS[@]}"
+    scan_partition_format
 fi

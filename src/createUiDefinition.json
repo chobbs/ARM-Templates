@@ -152,9 +152,12 @@
             "defaultValue": "Standard_D1",
             "toolTip": "Choose VM SKU, Standard D1, D2, D3",
             "recommendedSizes": [
-              "Standard_D1",
-              "Standard_D2",
-              "Standard_D3"
+                "Standard_DS1_v2",
+                "Standard_DS2_v2",
+                "Standard_DS3_v2",
+                "Standard_D2s_v3",
+                "Standard_D4s_v3",
+                "Standard_D8s_v3"
             ],
             "constraints": {
               "allowedSizes": [],

@@ -7,7 +7,7 @@
 #
 
 #########################
-# Logging
+# Logging func
 #########################
 
 # Custom logging with time so we can easily relate running times, also log to separate file so order is guaranteed.
@@ -42,14 +42,8 @@ fi
 CHRONOGRAF_VERSION="1.7.16"
 
 #########################
-# Installation steps
+# Installation func
 #########################
-
-random_password()
-{
-  < /dev/urandom tr -dc '!@#$%_A-Z-a-z-0-9' | head -c${1:-64}
-  echo
-}
 
 install_chronograf()
 {
@@ -72,24 +66,6 @@ install_chronograf()
     log "[install_chronograf] installed Chronograf $CHRONOGRAF_VERSION"
 }
 
-
-install_apt_package()
-{
-  local PACKAGE=$1
-  if [ $(dpkg-query -W -f='${Status}' $PACKAGE 2>/dev/null | grep -c "ok installed") -eq 0 ]; then
-    log "[install_$PACKAGE] installing $PACKAGE"
-    (apt-get -yq install $PACKAGE || (sleep 15; apt-get -yq install $PACKAGE))
-    local EXIT_CODE=$?
-    if [[ $EXIT_CODE -ne 0 ]]; then
-      "[install_$PACKAGE] installing $PACKAGE returned non-zero exit code: $EXIT_CODE"
-      exit $EXIT_CODE
-    fi
-    log "[install_$PACKAGE] installed $PACKAGE"
-  else
-    log "[install_$PACKAGE] already installed $PACKAGE"
-  fi
-}
-
 configure_systemd()
 {
     log "[configure_systemd] configure systemd to start Chronograf service automatically when system boots"
@@ -105,7 +81,7 @@ start_systemd()
 }
 
 #########################
-# Installation sequence
+# start sequence
 #########################
 
 

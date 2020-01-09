@@ -144,7 +144,7 @@
         "publisher": "influxdata"
       },
       "copy": {
-        "name": "meta-nodeVmLoop",
+        "name": "metanodeVmLoop",
         "count": 3
       },
       "dependsOn": [
