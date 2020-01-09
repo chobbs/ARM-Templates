@@ -48,17 +48,6 @@
         "bladeTitle": "Cluster Configuration",
         "elements": [
           {
-            "name": "deploymnetName",
-            "type": "Microsoft.Common.TextBox",
-            "label": "Deployment name",
-            "defaultValue": "",
-            "toolTip": "Name your InfluxEnterpirse deployment.",
-            "constraints": {
-              "required": true,
-              "validationMessage": "TODO"
-            }
-          },
-          {
             "name": "vmSizeMetarNodes",
             "type": "Microsoft.Compute.SizeSelector",
             "label": "Meta node VM size",
