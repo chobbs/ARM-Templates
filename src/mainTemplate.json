@@ -11,7 +11,7 @@
     },
     "loadBalancerType": { 
       "type": "string",
-      "defaultValue": "external",
+      "defaultValue": "internal",
       "allowedValues": [
         "internal",
         "external"
@@ -149,7 +149,6 @@
   },
   "variables": {
     "sharedTemplateUrl": "[uri(parameters('_artifactsLocation'), 'partials/shared-resources.json')]",
-    "clientPre": "[split(string(parameters('vmClientNodeCount')), '')[0]]",
     "metaTemplateUrl": "[uri(parameters('_artifactsLocation'), 'machines/meta-nodes-resources.json')]",
     "jumpboxTemplates": {
       "No": "empty/empty-resources.json",
@@ -260,7 +259,7 @@
     "dataLBSettings7": "[variables('lbBackendPoolsRemoved')]",
     "dataLBSettings8": "[variables('lbBackendPoolsRemoved')]",
     "dataLBSettings9": "[variables('lbBackendPoolsRemoved')]",
-    "dataLBSettings": "[variables(concat('dataLBSettings', variables('clientPre')))]",
+    "dataLBSettings": "[variables(concat('dataLBSettings', 0))]",
     "dataSkuSettings": {
       "Standard_D1_v2": {
         "storageAccountType": "Standard_LRS"
