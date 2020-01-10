@@ -100,13 +100,6 @@
         "description": "Size of the InfluxEnterprise meta nodes, 3 of these will be provisioned"
       }
     },
-    "vmClientNodeCount": {
-      "type": "int",
-      "defaultValue": 0,
-      "metadata": {
-        "description": "Number of IinfluxEnterprise client nodes to provision (Setting this to zero puts the data nodes on the load balancer)"
-      }
-    },
     "adminUsername": {
       "type": "string",
       "metadata": {
@@ -163,7 +156,8 @@
     "commonInstallParams": "[parameters('vmDataNodeCount')]",
     "ubuntuScripts": [
       "[concat(parameters('_artifactsLocation'), 'scripts/datanodes-configure.sh')]",
-      "[concat(parameters('_artifactsLocation'), 'scripts/chronograf-install.sh')]"
+      "[concat(parameters('_artifactsLocation'), 'scripts/chronograf-install.sh')]",
+      "[concat(parameters('_artifactsLocation'), 'scripts/autopart.sh')]"
     ],
     "ubuntuSettings": {
       "imageReference": {
@@ -181,6 +175,9 @@
           "autoUpgradeMinorVersion": true,
           "settings": {
             "fileUris": "[variables('ubuntuScripts')]"
+          },
+          "protectedSettings": {
+            "commandToExecute": "bash autopart.sh"
           }
         },
         "data": {
@@ -198,10 +195,10 @@
           "typeHandlerVersion": "2.0",
           "autoUpgradeMinorVersion": true,
           "settings": {
-            "fileUris": [
-              "[concat(parameters('_artifactsLocation'), '/scripts/chronograf-install.sh')]"
-                    ],
-                "commandToExecute": "bash chronograf-install.sh"
+            "fileUris": "[variables('ubuntuScripts')]"
+          },
+          "protectedSettings": {
+            "commandToExecute": "bash chronograf-install.sh"
           }
         }
       }
