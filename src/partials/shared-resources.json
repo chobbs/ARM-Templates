@@ -100,7 +100,8 @@
       "type": "Microsoft.Network/loadBalancers",
       "location": "[parameters('location')]",
       "dependsOn": [
-        "[concat('Microsoft.Network/publicIPAddresses/', 'publicIp')]"
+        "[concat('Microsoft.Network/publicIPAddresses/', 'publicIp')]",
+        "[concat('Microsoft.Network/virtualNetworks/', parameters('networkSettings').virtualNetworkName)]"
       ],
       "properties": {
         "frontendIPConfigurations": "[variables('feLoadBalancerConfig')]",

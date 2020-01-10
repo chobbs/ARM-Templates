@@ -152,6 +152,7 @@
       "No": "empty/empty-resources.json",
       "Yes": "machines/chronograf-resources.json"
     },
+    "clientPre": "[split(string(0), '')[0]]",
     "chronografTemplateUrl": "[uri(parameters('_artifactsLocation'), variables('chronografTemplates')[parameters('chronograf')])]",
     "commonInstallParams": "[parameters('vmDataNodeCount')]",
     "ubuntuScripts": [
@@ -259,7 +260,7 @@
     "dataLBSettings7": "[variables('lbBackendPoolsRemoved')]",
     "dataLBSettings8": "[variables('lbBackendPoolsRemoved')]",
     "dataLBSettings9": "[variables('lbBackendPoolsRemoved')]",
-    "dataLBSettings": "[variables(concat('dataLBSettings', 0))]",
+    "dataLBSettings": "[variables(concat('dataLBSettings', variables('clientPre')))]",
     "dataSkuSettings": {
       "Standard_D1_v2": {
         "storageAccountType": "Standard_LRS"
