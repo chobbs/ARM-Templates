@@ -152,7 +152,6 @@
       "No": "empty/empty-resources.json",
       "Yes": "machines/chronograf-resources.json"
     },
-    "clientPre": "[split(string(0), '')[0]]",
     "chronografTemplateUrl": "[uri(parameters('_artifactsLocation'), variables('chronografTemplates')[parameters('chronograf')])]",
     "commonInstallParams": "[parameters('vmDataNodeCount')]",
     "ubuntuScripts": [
