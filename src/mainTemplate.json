@@ -186,9 +186,6 @@
           "typeHandlerVersion": "2.0",
           "autoUpgradeMinorVersion": true,
           "settings": {
-          },
-          "protectedSettings": {
-
             "fileUris": [
               "[concat(parameters('_artifactsLocation'), '/scripts/autopart.sh')]"
                     ],
@@ -201,9 +198,6 @@
           "typeHandlerVersion": "2.0",
           "autoUpgradeMinorVersion": true,
           "settings": {
-          },
-          "protectedSettings": {
-
             "fileUris": [
               "[concat(parameters('_artifactsLocation'), '/scripts/chronograf-install.sh')]"
                     ],
