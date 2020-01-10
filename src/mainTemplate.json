@@ -186,7 +186,13 @@
           "typeHandlerVersion": "2.0",
           "autoUpgradeMinorVersion": true,
           "settings": {
-            "fileUris": "[variables('ubuntuScripts')]"
+          },
+          "protectedSettings": {
+
+            "fileUris": [
+              "[concat(parameters('_artifactsLocation'), '/scripts/autopart.sh')]"
+                    ],
+                "commandToExecute": "bash autopart.sh"
           }
         },
         "chronograf": {
@@ -195,6 +201,9 @@
           "typeHandlerVersion": "2.0",
           "autoUpgradeMinorVersion": true,
           "settings": {
+          },
+          "protectedSettings": {
+
             "fileUris": [
               "[concat(parameters('_artifactsLocation'), '/scripts/chronograf-install.sh')]"
                     ],
