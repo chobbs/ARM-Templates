@@ -86,7 +86,7 @@
      }
     },
     {
-      "apiVersion": "2015-06-15",
+      "apiVersion": "2019-04-01",
       "type": "Microsoft.Network/networkInterfaces",
       "name": "[concat('metaNodeNic', copyindex())]",
       "location": "[parameters('location')]",

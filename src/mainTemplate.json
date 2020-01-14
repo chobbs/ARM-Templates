@@ -152,10 +152,11 @@
       "No": "empty/empty-resources.json",
       "Yes": "machines/chronograf-resources.json"
     },
+    "clientPre": "[split(string(0), '')[0]]",
     "chronografTemplateUrl": "[uri(parameters('_artifactsLocation'), variables('chronografTemplates')[parameters('chronograf')])]",
     "commonInstallParams": "[parameters('vmDataNodeCount')]",
     "ubuntuScripts": [
-      "[concat(parameters('_artifactsLocation'), 'scripts/datanodes-configure.sh')]",
+      "[concat(parameters('_artifactsLocation'), 'scripts/cluster-configure.sh')]",
       "[concat(parameters('_artifactsLocation'), 'scripts/chronograf-install.sh')]",
       "[concat(parameters('_artifactsLocation'), 'scripts/autopart.sh')]"
     ],
@@ -175,9 +176,10 @@
           "autoUpgradeMinorVersion": true,
           "settings": {
             "fileUris": [
-              "[concat(parameters('_artifactsLocation'), '/scripts/autopart.sh')]"
+              "[concat(parameters('_artifactsLocation'), '/scripts/cluster-configure.sh')]", 
+              "[concat(parameters('_artifactsLocation'), 'scripts/autopart.sh')]"
                     ],
-                "commandToExecute": "bash autopart.sh"
+                "commandToExecute": "bash cluster-configure.sh -m'"
           }
         },
         "data": {
@@ -223,6 +225,7 @@
     },
     "location": "[variables('locationMap')[parameters('location')]]",
     "metaNodesIpPrefix": "10.0.0.1",
+    "dataNodesIpPrefix": "10.0.1.1",
     "networkSettings": {
       "virtualNetworkName": "[parameters('virtualNetworkName')]",
       "addressPrefix": "10.0.0.0/16",
@@ -259,6 +262,7 @@
     "dataLBSettings7": "[variables('lbBackendPoolsRemoved')]",
     "dataLBSettings8": "[variables('lbBackendPoolsRemoved')]",
     "dataLBSettings9": "[variables('lbBackendPoolsRemoved')]",
+
     "dataLBSettings": "[variables('lbBackEndPoolsAdded')]",
     "dataSkuSettings": {
       "Standard_D1_v2": {
@@ -396,6 +400,9 @@
           },
           "_artifactsLocation": {
             "value": "[parameters('_artifactsLocation')]"
+          },
+          "dataNodesIpPrefix": {
+            "value": "[variables('dataNodesIpPrefix')]"
           },
           "location": {
             "value": "[variables('location')]"
