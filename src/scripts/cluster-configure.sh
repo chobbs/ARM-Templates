@@ -22,7 +22,6 @@ help()
 
 # Custom logging with time so we can easily relate running times, also log to separate file so order is guaranteed.
 # The Script extension output the stdout/err buffer in intervals with duplicates.
-
 log()
 {
      echo \[$(date +%d%m%Y-%H:%M:%S)\] "$1"
@@ -43,9 +42,9 @@ fi
 # Configuration functions
 #########################
 
+
 setup_metanodes()
 {
-
   # TEMP-SOLUTION: Hard coded privateIP's
   # Append metanode vm hostname  to the hsots file
 
@@ -53,66 +52,81 @@ setup_metanodes()
     then
       log "$HOSTNAME already exists : $(grep $HOSTNAME $ETC_HOSTS)"
     else
-      log "Adding metanode-vm's to /etc/hosts"
-      echo "10.0.0.10 metanode-vm0" >> /etc/hosts
-      echo "10.0.0.11 metanode-vm1" >> /etc/hosts
-      echo "10.0.0.12 metanode-vm2" >> /etc/hosts
-      log "Metanode hostnames added to $ETC_HOSTS"
+        log "Adding metanode-vm's to /etc/hosts"
+        for i in $(seq 0 2); do 
+          echo "10.0.0.1${i} metanode-vm${i}" >> /etc/hosts
+        done        
+      log "Datanodes hostnames added to ${ETC_HOSTS}"
   fi
 }
 
 setup_datanodes()
 {
-
   # TEMP-SOLUTION: Hard coded privateIP's
   # Append metanode vm hostname  to the hsots file
+  END=`expr ${COUNT} - 1`
 
   if [ -n "$(grep ${HOSTNAME} /etc/hosts)" ]
     then
       log "$HOSTNAME already exists : $(grep $HOSTNAME $ETC_HOSTS)"
     else
-      log "Adding metanode-vm's to /etc/hosts"
-      echo "10.0.1.10 datanode-vm0" >> /etc/hosts
-      echo "10.0.0.11 datanode-vm1" >> /etc/hosts
-      echo "10.0.0.12 datanode-vm2" >> /etc/hosts
-
-      log "Metadata hostnames added to $ETC_HOSTS"
+        log "Adding datanode-vm's to /etc/hosts"
+        for i in $(seq 0 "${END}"); do 
+          echo "10.0.1.1${i} datanode-vm${i}" >> /etc/hosts
+        done        
+      log "Datanodes hostnames added to ${ETC_HOSTS}"
   fi
-}
-
-setup_datanodes()
-{
-
-    # TEMP-SOLUTION: Hard coded privateIP's
-    # Append metanode vm hostname  to the hsots file
-
-    for i in $(seq 1 $DATANODE_COUNT); do 
-      echo "10.0.1.${i} datanode-vm${i}" >> /etc/hosts
-    done
 }
 
 
 configure_metanodes()
 {
-
   #Generate and stage new configuration file
-  log "Generating configuration file at ${CONFIG_FILE}"
+  log "Generating metanode configuration file at ${META_CONFIG_FILE}"
   influxd-meta config > "${CONFIG_FILE}"
 
-  if [ -f "${CONFIG_FILE}" ]; then
-    log  "${CONFIG_FILE} file successfully generated"
-    sed -i "s/\(hostname *= *\).*/\1\"$HOSTNAME\"/" "${CONFIG_FILE}"
-    sed -i "s/\(license-key *= *\).*/\1\"$TEMP_LICENSE\"/" "${CONFIG_FILE}"
-    sudo sed -i "s/\(dir *= *\).*/\1\"\/influxdb\/meta\"/" "${CONFIG_FILE}"
+  if [ -f "${META_CONFIG_FILE}" ]; then
+    log  "${META_CONFIG_FILE} file successfully generated"
+    sed -i "s/\(hostname *= *\).*/\1\"$HOSTNAME\"/" "${META_CONFIG_FILE}"
+    sed -i "s/\(license-key *= *\).*/\1\"$TEMP_LICENSE\"/" "${META_CONFIG_FILE}"
+    sudo sed -i "s/\(dir *= *\).*/\1\"\/influxdb\/meta\"/" "${META_CONFIG_FILE}"
 
 
-    # create working dirs for meatanode service
+    # create working dir for meatanode service
     mkdir -p "/influxdb/meta"
     chown -R influxdb:influxdb "/influxdb/"
     log "Metanode directory structure configured"
 
   else
-     log  "Error creating file ${CONFIG_FILE} . You will need to manually configure the metanode."
+     log  "Error creating file ${META_CONFIG_FILE} . You will need to manually configure the metanode."
+     exit 1
+  fi
+}
+
+configure_datanodes()
+{
+  #Generate and stage new configuration file
+  log "Generating datanode configuration file at ${DATA_CONFIG_FILE}"
+  influxd config > "${DATA_CONFIG_FILE}"
+
+  if [ -f "${DATA_CONFIG_FILE}" ]; then
+    log  "${DATA_CONFIG_FILE} file successfully generated"
+    chown -R influxdb:influxdb "${DATA_CONFIG_FILE}"
+
+    sed -i "s/\(hostname *= *\).*/\1\"$HOSTNAME\"/" "${DATA_CONFIG_FILE}"
+    sed -i "s/\(license-key *= *\).*/\1\"$TEMP_LICENSE\"/" "${DATA_CONFIG_FILE}"
+    #sudo sed -i "s/\(dir *= *\).*/\1\"\/influxdb\/meta\"/" "${DATA_CONFIG_FILE}"
+
+    # create working dirs for datanode service
+    mkdir -p "/influxdb/meta"
+    mkdir -p "/influxdb/data"
+    mkdir -p "/influxdb/wal"
+    mkdir -p "/influxdb/hh"
+    chown -R influxdb:influxdb "/influxdb/"
+    log "Datanode directory structure configured"
+
+  else
+     log  "Error creating file ${DATA_CONFIG_FILE} . You will need to manually configure the metanode."
      exit 1
   fi
 }
@@ -126,29 +140,29 @@ start_systemd()
     sudo systemctl start influxdb-meta
   else
     log "[start_systemd] starting Datanode"
-    sudo systemctl start influxdb
+    #sudo systemctl start influxdb
   fi
 }
 
 
 #Script Parameters
-CONFIG_FILE=/etc/influxdb/influxdb-meta.conf
+META_CONFIG_FILE=/etc/influxdb/influxdb-meta.conf
+DATA_CONFIG_FILE=/etc/influxdb/influxdb.conf
 TEMP_LICENSE="d2951f76-a329-4bd9-b9bc-12984b897031"
 ETC_HOSTS="/etc/hosts"
 
 
 #Loop through options passed
-while getopts :m:d:h optname; do
+while getopts :m:d:c:h optname; do
   log "Option $optname set"
   case $optname in
-    m)  #influxenterpise metanode configuration
-      echo "set metanode..."
+    m)  #configure metanode 
       METANODE="${OPTARG}"
       ;;
-    d) #influxenterpise datanoe configuration
+    d) #configure datanoe 
       DATANODE="${OPTARG}"
       ;;
-    c) #influxenterpise datanode count
+    c) # datanode count
       COUNT="${OPTARG}"
       ;;
     h) #show help
@@ -187,13 +201,17 @@ bash autopart.sh
 if [ "${METANODE}" == 1 ];
 then
     log "Executing Metanode configuration functions"
-    configure_metanodes
 
     setup_metanodes
 
+    configure_metanodes
+
 else
     log "Executing Datanode configuration functions"
+    
+    setup_datanodes
 
+    configure_datanodes
 fi
 
 
