@@ -57,7 +57,7 @@ setup_metanodes()
       echo "10.0.0.10 metanode-vm0" >> /etc/hosts
       echo "10.0.0.11 metanode-vm1" >> /etc/hosts
       echo "10.0.0.12 metanode-vm2" >> /etc/hosts
-      log "Metadata hostnames added to $ETC_HOSTS"
+      log "Metanode hostnames added to $ETC_HOSTS"
   fi
 }
 
@@ -75,6 +75,7 @@ setup_datanodes()
       echo "10.0.1.10 datanode-vm0" >> /etc/hosts
       echo "10.0.0.11 datanode-vm1" >> /etc/hosts
       echo "10.0.0.12 datanode-vm2" >> /etc/hosts
+
       log "Metadata hostnames added to $ETC_HOSTS"
   fi
 }
@@ -108,7 +109,7 @@ configure_metanodes()
     # create working dirs for meatanode service
     mkdir -p "/influxdb/meta"
     chown -R influxdb:influxdb "/influxdb/"
-    log "Metanode configuration file completed"
+    log "Metanode directory structure configured"
 
   else
      log  "Error creating file ${CONFIG_FILE} . You will need to manually configure the metanode."
@@ -123,11 +124,9 @@ start_systemd()
   then
     log "[start_systemd] starting Metanode"
     sudo systemctl start influxdb-meta
-    log "[start_systemd] started Metanode"
   else
     log "[start_systemd] starting Datanode"
     sudo systemctl start influxdb
-    log "[start_systemd] started Datanode"
   fi
 }
 
@@ -136,7 +135,6 @@ start_systemd()
 CONFIG_FILE=/etc/influxdb/influxdb-meta.conf
 TEMP_LICENSE="d2951f76-a329-4bd9-b9bc-12984b897031"
 ETC_HOSTS="/etc/hosts"
-NODE_TYPE=`echo $HOSTNAME | awk '{print substr($0,0,8)}'`
 
 
 #Loop through options passed
@@ -165,35 +163,6 @@ while getopts :m:d:h optname; do
   esac
 done
 
-# Install Oracle Java
-install_java()
-{
-    log "Installing Java"
-    add-apt-repository -y ppa:webupd8team/java
-    apt-get -y update  > /dev/null
-    echo debconf shared/accepted-oracle-license-v1-1 select true | sudo debconf-set-selections
-    echo debconf shared/accepted-oracle-license-v1-1 seen true | sudo debconf-set-selections
-    apt-get -y install oracle-java8-installer
-
-    log "Installed Java"
-}
-
-# Install Elasticsearch
-install_es()
-{
-    # Elasticsearch 2.0.0 uses a different download path
-    if [[ "${ES_VERSION}" == \2* ]]; then
-        DOWNLOAD_URL="https://download.elasticsearch.org/elasticsearch/release/org/elasticsearch/distribution/deb/elasticsearch/$ES_VERSION/elasticsearch-$ES_VERSION.deb"
-    else
-        DOWNLOAD_URL="https://download.elasticsearch.org/elasticsearch/elasticsearch/elasticsearch-$ES_VERSION.deb"
-    fi
-
-    log "Installing Elaticsearch Version - $ES_VERSION"
-    log "Download location - $DOWNLOAD_URL"
-    sudo wget -q "$DOWNLOAD_URL" -O elasticsearch.deb
-    sudo dpkg -i elasticsearch.deb
-}
-
 install_ntp()
 {
     log "installing ntp deamon"
@@ -210,21 +179,22 @@ install_ntp()
 #Format data disk (Find data disks then partition, format, and mount it
 # as seperate drive under /influxdb/* )_
 #------------------------
+log "Running autopat.sh script"
+
 bash autopart.sh
+
 
 if [ "${METANODE}" == 1 ];
 then
-    log "Script executing Metanode configuration"
-    echo "Script executing Metanode configuration"
+    log "Executing Metanode configuration functions"
     configure_metanodes
+
+    setup_metanodes
+
 else
-    echo "Script executing Datanode configuration"
+    log "Executing Datanode configuration functions"
 
 fi
-
-#configure /etc/hosts file
-#------------------------
-setup_metanodes
 
 
 #Start service process
@@ -239,13 +209,3 @@ else
     log "The Service process did not start, try running manually"
     exit 1
 fi
-
-
-
-#Install Oracle Java
-#------------------------
-#setup_hostnames
-
-#Install Oracle Java
-#------------------------
-#install_java

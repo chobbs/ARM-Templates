@@ -230,7 +230,7 @@
             "dependsOn": [
               "[concat('Microsoft.Compute/virtualMachines/', parameters('namespace'),'-vm',copyindex())]"
               ],
-            "properties": "[parameters('osSettings').extentionSettings.meta]"
+            "properties": "[parameters('osSettings').extentionSettings.data]"
           }
         ]
       }

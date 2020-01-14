@@ -179,7 +179,7 @@
               "[concat(parameters('_artifactsLocation'), '/scripts/cluster-configure.sh')]", 
               "[concat(parameters('_artifactsLocation'), 'scripts/autopart.sh')]"
                     ],
-                "commandToExecute": "bash cluster-configure.sh -m'"
+                "commandToExecute": "bash cluster-configure.sh -m 1'"
           }
         },
         "data": {
