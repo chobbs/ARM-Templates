@@ -51,13 +51,12 @@ setup_metanodes()
 
   if [ -n "$(grep ${HOSTNAME} /etc/hosts)" ]
     then
-      log "$HOSTNAME already exists : $(grep $HOSTNAME $ETC_HOSTS)"
+      log "hostname already exists : $(grep $HOSTNAME $ETC_HOSTS)"
     else
         log "Adding metanode-vm's to /etc/hosts"
         for i in $(seq 0 2); do 
           echo "10.0.0.1${i} metanode-vm${i}" >> /etc/hosts
         done        
-      log "metanodes hostnames added to ${ETC_HOSTS}"
   fi
 }
 
@@ -69,13 +68,12 @@ setup_datanodes()
 
   if [ -n "$(grep ${HOSTNAME} /etc/hosts)" ]
     then
-      log "$HOSTNAME already exists : $(grep $HOSTNAME $ETC_HOSTS)"
+      log "hostname already exists : $(grep $HOSTNAME $ETC_HOSTS)"
     else
         log "adding datanode-vm's to /etc/hosts"
         for i in $(seq 0 "${END}"); do 
           echo "10.0.1.1${i} datanode-vm${i}" >> /etc/hosts
         done        
-      log "datanodes hostnames added to ${ETC_HOSTS}"
   fi
 }
 
@@ -83,7 +81,7 @@ setup_datanodes()
 configure_metanodes()
 {
   #Generate and stage new configuration file
-  log "generating metanode configuration file at ${META_GEN_FILE}"
+  log "[influxd-meta ] generating new metanode configuration file at ${META_GEN_FILE}"
   influxd-meta config > "${META_GEN_FILE}"
 
   if [ -f "${META_GEN_FILE}" ]; then
@@ -95,22 +93,23 @@ configure_metanodes()
        exit 1
     fi
     
+    # need to update the influxdb-meta.conf default values
+    log  "[sed] updated ${META_CONFIG_FILE} default file values"
 
     chown influxdb:influxdb "${META_CONFIG_FILE}"
     sed -i "s/\(hostname *= *\).*/\1\"$HOSTNAME\"/" "${META_CONFIG_FILE}"
     sed -i "s/\(license-key *= *\).*/\1\"$TEMP_LICENSE\"/" "${META_CONFIG_FILE}"
     sed -i "s/\(dir *= *\).*/\1\"\/influxdb\/meta\"/" "${META_CONFIG_FILE}"
 
-    log  "updated ${META_CONFIG_FILE} file values successfuly"
-
 
     # create working dir for meatanode service
+    log "[mkdir] creating metanode directory structure"
+
     mkdir -p "/influxdb/meta"
     chown -R influxdb:influxdb "/influxdb/"
-    log "metanode directory structure configured"
 
   else
-     log  "error creating file ${META_GEN_FILE}. you will need to manually configure the metanode."
+     log  "err: creating file ${META_GEN_FILE}. you will need to manually configure the metanode."
      exit 1
   fi
 }
@@ -118,11 +117,11 @@ configure_metanodes()
 configure_datanodes()
 {
   #Generate and stage new configuration file
-  log "Generating datanode configuration file at ${DATA_GEN_FILE}"
+  log "[influxd] generating new datanode configuration file at ${DATA_GEN_FILE}"
   influxd config > "${DATA_GEN_FILE}"
 
   if [ -f "${DATA_GEN_FILE}" ]; then
-    log  "${DATA_GEN_FILE} file successfully generated"
+    log "successfully generating configuration file at ${DATA_GEN_FILE}"
 
     cp -p  "${DATA_GEN_FILE}" "${DATA_CONFIG_FILE}"
     if [ $? != 0 ]; then
@@ -130,22 +129,24 @@ configure_datanodes()
        exit 1
     fi
 
+    # need to update the influxdb.conf default values
+    log  "[sed] updated ${META_CONFIG_FILE} default file values"
+
     chown influxdb:influxdb "${DATA_CONFIG_FILE}"
     sed -i "s/\(hostname *= *\).*/\1\"$HOSTNAME\"/" "${DATA_CONFIG_FILE}"
     sed -i "s/\(license-key *= *\).*/\1\"$TEMP_LICENSE\"/" "${DATA_CONFIG_FILE}"
-    #sudo sed -i "s/\(dir *= *\).*/\1\"\/influxdb\/meta\"/" "${DATA_CONFIG_FILE}"
 
     # create working dirs and file for datanode service
+    log "[mkdir] creating datanode directory structure"
+
     mkdir -p "/influxdb/meta"
     mkdir -p "/influxdb/data"
     mkdir -p "/influxdb/wal"
     mkdir -p "/influxdb/hh"
     chown -R influxdb:influxdb "/influxdb/"
 
-    log "datanode directory structure configured"
-
   else
-     log  "error creating file ${DATA_GEN_FILE}. you will need to manually configure the metanode."
+     log  "err: creating file ${DATA_GEN_FILE}. you will need to manually configure the metanode."
      exit 1
   fi
 }
@@ -166,9 +167,9 @@ start_systemd()
 
 #Script Parameters
 META_GEN_FILE="/etc/influxdb/influxdb-meta-generated.conf"
-DATA_GEN_FILE="/influxdb-generated.conf"
+DATA_GEN_FILE="/etc/influxdb/influxdb-generated.conf"
 META_CONFIG_FILE="/etc/influxdb/influxdb-meta.conf"
-DATA_CONFIG_FILE="/influxdb.conf"
+DATA_CONFIG_FILE="/etc/influxdb/influxdb.conf"
 TEMP_LICENSE="d2951f76-a329-4bd9-b9bc-12984b897031"
 ETC_HOSTS="/etc/hosts"
 
@@ -217,21 +218,21 @@ install_ntp()
 #Format data disk (Find data disks then partition, format, and mount it
 # as seperate drive under /influxdb/* )_
 #------------------------
-log "running autopat.sh script"
+log "[autopart] running auto partitioning & mounting"
 
 bash autopart.sh
 
 
 if [ "${METANODE}" == 1 ];
   then
-    log "executing Metanode configuration functions"
+    log "[metanode_funcs] executing Metanode configuration functions"
 
     setup_metanodes
 
     configure_metanodes
 
   else
-    log "executing Datanode configuration functions"
+    log "[datanode_funcs] executing datanode configuration functions"
     
     setup_datanodes
 
@@ -246,8 +247,8 @@ start_systemd
 PROC_CHECK=`ps aux | grep -v grep | grep influxdb`
 if [ $? == 0 ]
   then
-    log "service process started successfully"
+    log "[ps_aux] service process check, started successfully"
   else
-    log "service process did not start, try running manually"
+    log "err: service process did not start, try running manually"
     exit 1
 fi
