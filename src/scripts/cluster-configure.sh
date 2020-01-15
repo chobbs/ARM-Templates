@@ -13,6 +13,7 @@ help()
     echo "-m  Metanode configuration"
     echo "-d  Datanode configuration"
     echo "-c  Cluster datanode count"
+    echo "-j  Join cluster nodes"
     echo "-h  view this help content"
 }
 
@@ -83,7 +84,7 @@ configure_metanodes()
 {
   #Generate and stage new configuration file
   log "Generating metanode configuration file at ${META_CONFIG_FILE}"
-  influxd-meta config > "${CONFIG_FILE}"
+  influxd-meta config > "${META_CONFIG_FILE}"
 
   if [ -f "${META_CONFIG_FILE}" ]; then
     log  "${META_CONFIG_FILE} file successfully generated"
@@ -137,7 +138,7 @@ start_systemd()
   if [ "${METANODE}" == 1 ]
   then
     log "[start_systemd] starting Metanode"
-    sudo systemctl start influxdb-meta
+    systemctl start influxdb-meta
   else
     log "[start_systemd] starting Datanode"
     #sudo systemctl start influxdb
@@ -153,7 +154,7 @@ ETC_HOSTS="/etc/hosts"
 
 
 #Loop through options passed
-while getopts :m:d:c:h optname; do
+while getopts :m:d:c:j:h optname; do
   log "Option $optname set"
   case $optname in
     m)  #configure metanode 
@@ -164,6 +165,9 @@ while getopts :m:d:c:h optname; do
       ;;
     c) # datanode count
       COUNT="${OPTARG}"
+      ;;
+    j) # join cluster
+      JOIN="${OPTARG}"
       ;;
     h) #show help
       help
@@ -199,14 +203,14 @@ bash autopart.sh
 
 
 if [ "${METANODE}" == 1 ];
-then
+  then
     log "Executing Metanode configuration functions"
 
     setup_metanodes
 
     configure_metanodes
 
-else
+  else
     log "Executing Datanode configuration functions"
     
     setup_datanodes

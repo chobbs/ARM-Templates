@@ -152,9 +152,9 @@
       "No": "empty/empty-resources.json",
       "Yes": "machines/chronograf-resources.json"
     },
-    "clientPre": "[split(string(0), '')[0]]",
     "chronografTemplateUrl": "[uri(parameters('_artifactsLocation'), variables('chronografTemplates')[parameters('chronograf')])]",
-    "commonInstallParams": "[parameters('vmDataNodeCount')]",
+    "commonInstallParams": "[concat(' -c ', parameters('vmDataNodeCount'))]",
+
     "ubuntuScripts": [
       "[concat(parameters('_artifactsLocation'), 'scripts/cluster-configure.sh')]",
       "[concat(parameters('_artifactsLocation'), 'scripts/chronograf-install.sh')]",
@@ -189,9 +189,10 @@
           "autoUpgradeMinorVersion": true,
           "settings": {
             "fileUris": [
-              "[concat(parameters('_artifactsLocation'), '/scripts/autopart.sh')]"
+              "[concat(parameters('_artifactsLocation'), '/scripts/autopart.sh')]",
+              "[concat(parameters('_artifactsLocation'), 'scripts/autopart.sh')]"
                     ],
-                "commandToExecute": "bash autopart.sh"
+                "commandToExecute": "[concat('bash cluster-configure.sh -d 1', variables('commonInstallParams'))]"
           }
         },
         "chronograf": {
