@@ -33,7 +33,7 @@ log()
 log "Begin execution of Cluster Configuration script extension on ${HOSTNAME}"
 
 if [ "${UID}" -ne 0 ];
-then
+  then
     log "Script executed without root permissions"
     echo "You must be root to run this program." >&2
     exit 3
@@ -87,10 +87,16 @@ configure_metanodes()
   influxd-meta config > "${META_GEN_FILE}"
 
   if [ -f "${META_GEN_FILE}" ]; then
-    log  "${META_GEN_FILE} file successfully generated"
-    mv -vn  "${META_GEN_FILE}" "${META_CONFIG_FILE}"
-    chown influxdb:influxdb "${META_CONFIG_FILE}"
+    log "successfully generating configuration file at ${META_GEN_FILE}"
 
+    cp -p  "${META_GEN_FILE}" "${META_CONFIG_FILE}"
+    if [ $? != 0 ]; then
+       log "err: could not copy new "${META_CONFIG_FILE}" file to /etc/influxdb."
+       exit 1
+    fi
+    
+
+    chown influxdb:influxdb "${META_CONFIG_FILE}"
     sed -i "s/\(hostname *= *\).*/\1\"$HOSTNAME\"/" "${META_CONFIG_FILE}"
     sed -i "s/\(license-key *= *\).*/\1\"$TEMP_LICENSE\"/" "${META_CONFIG_FILE}"
     sed -i "s/\(dir *= *\).*/\1\"\/influxdb\/meta\"/" "${META_CONFIG_FILE}"
@@ -117,10 +123,14 @@ configure_datanodes()
 
   if [ -f "${DATA_GEN_FILE}" ]; then
     log  "${DATA_GEN_FILE} file successfully generated"
-    mv -vn  "${DATA_GEN_FILE}" "${DATA_CONFIG_FILE}"
+
+    cp -p  "${DATA_GEN_FILE}" "${DATA_CONFIG_FILE}"
+    if [ $? != 0 ]; then
+       log "err: could not copy new "${DATA_GEN_FILE}" file to file to /etc/influxdb."
+       exit 1
+    fi
+
     chown influxdb:influxdb "${DATA_CONFIG_FILE}"
-
-
     sed -i "s/\(hostname *= *\).*/\1\"$HOSTNAME\"/" "${DATA_CONFIG_FILE}"
     sed -i "s/\(license-key *= *\).*/\1\"$TEMP_LICENSE\"/" "${DATA_CONFIG_FILE}"
     #sudo sed -i "s/\(dir *= *\).*/\1\"\/influxdb\/meta\"/" "${DATA_CONFIG_FILE}"
@@ -235,9 +245,9 @@ start_systemd
 
 PROC_CHECK=`ps aux | grep -v grep | grep influxdb`
 if [ $? == 0 ]
-then
+  then
     log "service process started successfully"
-else
+  else
     log "service process did not start, try running manually"
     exit 1
 fi
