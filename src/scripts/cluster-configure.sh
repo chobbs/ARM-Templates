@@ -127,7 +127,7 @@ configure_datanodes()
     log "Datanode directory structure configured"
 
   else
-     log  "Error creating file ${DATA_CONFIG_FILE} . You will need to manually configure the metanode."
+     log  "Error creating file ${DATA_CONFIG_FILE}. You will need to manually configure the metanode."
      exit 1
   fi
 }
