@@ -141,14 +141,14 @@ start_systemd()
     systemctl start influxdb-meta
   else
     log "[start_systemd] starting Datanode"
-    #sudo systemctl start influxdb
+    systemctl start influxdb
   fi
 }
 
 
 #Script Parameters
-META_CONFIG_FILE=/etc/influxdb/influxdb-meta.conf
-DATA_CONFIG_FILE=/etc/influxdb/influxdb.conf
+META_CONFIG_FILE="/etc/influxdb/influxdb-meta.conf"
+DATA_CONFIG_FILE="/etc/influxdb/influxdb.conf"
 TEMP_LICENSE="d2951f76-a329-4bd9-b9bc-12984b897031"
 ETC_HOSTS="/etc/hosts"
 
