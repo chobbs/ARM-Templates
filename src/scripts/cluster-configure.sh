@@ -212,6 +212,22 @@ while getopts :m:d:c:j:h optname; do
   esac
 done
 
+
+process_check()
+{
+#Check service status
+#------------------------
+PROC_CHECK=`ps aux | grep -v grep | grep influxdb`
+if [ $? == 0 ]
+  then
+    log "[ps_aux] service process check, started successfully"
+  else
+    log "err: service process did not start, try running manually"
+    exit 1
+fi
+
+}
+
 install_ntp()
 {
     log "installing ntp deamon"
@@ -238,8 +254,6 @@ if [ "${JOIN}" == 1 ];
     log "[join_funcs] executing cluster join commands on master metanode"
 
     join_cluster
-
-    exit 0
 fi
 
 if [ "${METANODE}" == 1 ];
@@ -262,12 +276,5 @@ fi
 #Start service process
 #------------------------
 start_systemd
+process_check
 
-PROC_CHECK=`ps aux | grep -v grep | grep influxdb`
-if [ $? == 0 ]
-  then
-    log "[ps_aux] service process check, started successfully"
-  else
-    log "err: service process did not start, try running manually"
-    exit 1
-fi

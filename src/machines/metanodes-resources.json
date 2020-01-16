@@ -233,7 +233,8 @@
         "[concat('Microsoft.Network/networkInterfaces/', 'metaNodeNic0')]",
         "[concat('Microsoft.Compute/availabilitySets/', 'metanode-set')]",
         "[concat('Microsoft.Resources/deployments/', 'osProfileMeta0')]",
-        "[concat('Microsoft.Compute/virtualMachines/', parameters('namespace'),'-vm',copyindex(1),'/extensions/', 'configureMetanode')]"
+        "[concat('Microsoft.Compute/virtualMachines/', parameters('namespace'),'-vm1','/extensions/', 'configureMetanode')]",
+        "[concat('Microsoft.Compute/virtualMachines/', parameters('namespace'),'-vm2','/extensions/', 'configureMetanode')]"
       ],
       "properties": {
         "availabilitySet": {
