@@ -79,11 +79,11 @@ setup_datanodes()
 
 join_cluster()
 {
-   #joining meatanodes . .
+  #joining meatanodes . .
   log "[influxd-ctl add-meta] joing (3) metanodes to cluster"
-  for i in $(seq 0 2); do 
-    influxd-ctl add-meta  "metanode-vm${i}:8091"
-  done   
+  #for i in $(seq 0 2); do 
+  #  influxd-ctl add-meta  "metanode-vm${i}:8091"
+  #done   
 }
 
 
