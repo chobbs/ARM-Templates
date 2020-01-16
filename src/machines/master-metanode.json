@@ -92,7 +92,7 @@
       "location": "[parameters('location')]",
       "copy": {
         "name": "metaNodesNicLoop",
-        "count": 3
+        "count": 1
       },
       "properties": {
         "ipConfigurations": [

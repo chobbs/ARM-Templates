@@ -77,6 +77,15 @@ setup_datanodes()
   fi
 }
 
+join_cluster()
+{
+   #joining meatanodes . .
+  log "[influxd-ctl add-meta] joing (3) metanodes to cluster"
+  for i in $(seq 0 2); do 
+    influxd-ctl add-meta  "metanode-vm${i}:8091"
+  done   
+}
+
 
 configure_metanodes()
 {
@@ -224,9 +233,18 @@ log "[autopart] running auto partitioning & mounting"
 bash autopart.sh
 
 
+if [ "${JOIN}" == 1 ];
+  then
+    log "[join_funcs] executing cluster join commands on master metanode"
+
+    join_cluster
+
+    exit 0
+fi
+
 if [ "${METANODE}" == 1 ];
   then
-    log "[metanode_funcs] executing Metanode configuration functions"
+    log "[metanode_funcs] executing metanode configuration functions"
 
     setup_metanodes
 

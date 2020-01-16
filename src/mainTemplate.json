@@ -142,7 +142,7 @@
   },
   "variables": {
     "sharedTemplateUrl": "[uri(parameters('_artifactsLocation'), 'partials/shared-resources.json')]",
-    "metaTemplateUrl": "[uri(parameters('_artifactsLocation'), 'machines/meta-nodes-resources.json')]",
+    "metaTemplateUrl": "[uri(parameters('_artifactsLocation'), 'machines/metanodes-resources.json')]",
     "jumpboxTemplates": {
       "No": "empty/empty-resources.json",
       "Yes": "machines/jumpbox-resources.json"
@@ -193,6 +193,19 @@
               "[concat(parameters('_artifactsLocation'), '/scripts/cluster-configure.sh')]"
                     ],
                 "commandToExecute": "[concat('bash cluster-configure.sh -d 1', variables('commonInstallParams'))]"
+          }
+        },
+        "master": {
+          "publisher": "Microsoft.Azure.Extensions",
+          "type": "CustomScript",
+          "typeHandlerVersion": "2.0",
+          "autoUpgradeMinorVersion": true,
+          "settings": {
+            "fileUris": [
+              "[concat(parameters('_artifactsLocation'), '/scripts/autopart.sh')]",
+              "[concat(parameters('_artifactsLocation'), '/scripts/cluster-configure.sh')]"
+                    ],
+                "commandToExecute": "bash cluster-configure.sh -j 1"
           }
         },
         "chronograf": {
@@ -303,7 +316,7 @@
       "accountType": "[variables('dataSkuSettings')[parameters('vmSizeDataNodes')].storageAccountType]",
       "diskSize": "[variables('dataDiskSizes')[parameters('vmDataDiskSize')]]"
     },
-    "dataTemplateUrl": "[uri(parameters('_artifactsLocation'), 'machines/data-nodes-resources.json')]"
+    "dataTemplateUrl": "[uri(parameters('_artifactsLocation'), 'machines/datanodes-resources.json')]"
   },
   "resources": [
     {
