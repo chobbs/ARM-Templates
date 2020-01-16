@@ -215,11 +215,11 @@
         },
         {
         "type": "Microsoft.Compute/virtualMachines/extensions",
-            "name": "[concat(parameters('namespace'),'-vm0', '/configureMetanode')]",
+            "name": "[concat(parameters('namespace'),'-vm0', '/clusterJoin')]",
             "apiVersion": "2019-03-01",
             "location": "[parameters('location')]",
             "dependsOn": [
-              "[concat(parameters('namespace'),'-vm',copyindex(), '/clusterJoin')]"
+              "[concat(parameters('namespace'),'-vm',copyindex(), '/configureMetanode')]"
               ],
             "properties": "[parameters('osSettings').extentionSettings.master]"
         }
