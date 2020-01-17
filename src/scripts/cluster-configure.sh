@@ -3,7 +3,9 @@
 # License: https://github.com/influxdata/azure-resource-manager-influxdb-enterprise/blob/master/LICENSE
 #
 # Configure InfluxEnterprise from deployed ARM templates
-# Initial Version
+#
+# 01/2020 Initial Version
+#--------------------------
 #
 
 help()
@@ -36,12 +38,12 @@ START_TIME=$SECONDS
 
 
 #########################
-# Preconditions
+# Check user access
 #########################
 
 if [ "${UID}" -ne 0 ];
   then
-    log "Script executed without root permissions"
+    log "[preconditions] Script executed without root permissions"
     echo "You must be root to run this program." >&2
     exit 3
 fi
@@ -109,7 +111,7 @@ setup_datanodes()
   # Append metanode vm hostname  to the hsots file
 
   if [ -z "${COUNT}" ]; then
-    log  "err: missing datanode count parameter"
+    log  "err: missing datanode count parameter..."
     exit 2
   fi
 
@@ -130,7 +132,7 @@ setup_datanodes()
 join_metanodes()
 {
   #joining meatanodes
-  log "[influxd-ctl_add-meta] joining (3) metanodes to cluster"
+  log "[influxd-ctl_add-meta] joining 3 metanodes to cluster"
   for i in $(seq 0 2); do 
     influxd-ctl add-meta  "metanode-vm${i}:8091"
   done
@@ -139,7 +141,7 @@ join_metanodes()
 join_datanodes()
 {
   #joining datanodes
-  log "[influxd-ctl_add-data] joining all datanodes to cluster"
+  log "[influxd-ctl_add-data] joining ${COUNT} datanodes to cluster"
 
   END=`expr ${COUNT} - 1`
   for i in $(seq 0 "${END}"); do
@@ -155,10 +157,10 @@ configure_metanodes()
 
   if [ -f "${META_GEN_FILE}" ]; then
     cp -p  "${META_GEN_FILE}" "${META_CONFIG_FILE}"
-
-    if [ $? != 0 ]; then
-       log "err: could not copy new "${META_CONFIG_FILE}" file to /etc/influxdb."
-       exit 1
+    EXIT_CODE=$?
+    if [[ $EXIT_CODE -ne 0 ]]; then
+       log "err: could not copy new "${META_CONFIG_FILE}" file to /etc/influxdb"
+      exit $EXIT_CODE
     fi
     
     #need to update the influxdb-meta.conf default values
@@ -177,7 +179,7 @@ configure_metanodes()
     chown -R influxdb:influxdb "/influxdb/"
 
   else
-     log  "err: creating file ${META_GEN_FILE}. you will need to manually configure the metanode."
+     log  "err: creating file ${META_GEN_FILE}. you will need to manually configure the metanode..."
      exit 1
   fi
 }
@@ -191,9 +193,10 @@ configure_datanodes()
   if [ -f "${DATA_GEN_FILE}" ]; then
 
     cp -p  "${DATA_GEN_FILE}" "${DATA_CONFIG_FILE}"
-    if [ $? != 0 ]; then
-       log "err: could not copy new "${DATA_GEN_FILE}" file to file to /etc/influxdb."
-       exit 1
+    EXIT_CODE=$?
+    if [[ $EXIT_CODE -ne 0 ]]; then
+       log "err: could not copy new "${DATA_GEN_FILE}" file to file to /etc/influxdb"
+      exit $EXIT_CODE
     fi
 
     #need to update the influxdb.conf default values
@@ -214,7 +217,7 @@ configure_datanodes()
     chown -R influxdb:influxdb "/influxdb/"
 
   else
-     log  "err: creating file ${DATA_GEN_FILE}. you will need to manually configure the metanode."
+     log  "err: creating file ${DATA_GEN_FILE}. you will need to manually configure the metanode..."
      exit 1
   fi
 }
@@ -224,7 +227,7 @@ datanode_count()
   log "[datanode_count] checking COUNT parameter"
 
   if [ -z "${COUNT}" ]; then
-    log "err: please set \$_COUNT parameter"
+    log "err: please set \$_COUNT parameter..."
 
     exit 1
   fi
@@ -243,16 +246,15 @@ start_systemd()
 
 process_check()
 {
-#check service status
-PROC_CHECK=`ps aux | grep -v grep | grep influxdb`
-if [ $? == 0 ]
-  then
-    log "[process_check] service process started successfully"
-  else
-    log "err: service process did not start, try running manually"
-    exit 1
-fi
+  #check service status
+  log "[process_check] check service process started"
 
+  PROC_CHECK=`ps aux | grep -v grep | grep influxdb`
+  EXIT_CODE=$?
+  if [[ $EXIT_CODE -ne 0 ]]; then
+    log "err: could not copy new "${DATA_GEN_FILE}" file to file to /etc/influxdb"
+    exit $EXIT_CODE
+  fi
 }
 
 install_ntp()
