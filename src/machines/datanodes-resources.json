@@ -224,7 +224,7 @@
         "resources": [
           {
             "type": "Microsoft.Compute/virtualMachines/extensions",
-            "name": "[concat(parameters('namespace'),'-vm',copyindex(), '/configureDatanode')]",
+            "name": "[concat(parameters('namespace'),'-vm',copyindex(), '/configureDatanode',copyindex())]",
             "apiVersion": "2019-03-01",
             "location": "[parameters('location')]",
             "dependsOn": [

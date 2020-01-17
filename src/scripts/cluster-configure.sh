@@ -260,7 +260,7 @@ install_ntp()
 {
     log "installing ntp deamon"
     apt-get -y install ntp
-    #ntpdate pool.ntp.org
+    ntpdate pool.ntp.org
     log "installed ntp deamon and ntpdate"
 }
 
@@ -277,8 +277,6 @@ if [[ $EXIT_CODE -ne 0 ]]; then
 fi
 log "[apt-get] updated apt-get"
 
-
-#install_ntp
 
 #format data disk (Find data disks then partition, format, and mount it
 # as seperate drive under /influxdb/* )_
