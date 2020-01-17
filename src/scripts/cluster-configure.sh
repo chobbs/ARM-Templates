@@ -131,10 +131,9 @@ join_metanodes()
 {
   #joining meatanodes
   log "[influxd-ctl_add-meta] joining (3) metanodes to cluster"
-
   for i in $(seq 0 2); do 
     influxd-ctl add-meta  "metanode-vm${i}:8091"
-  done   
+  done
 }
 
 join_datanodes()
@@ -143,9 +142,9 @@ join_datanodes()
   log "[influxd-ctl_add-data] joining all datanodes to cluster"
 
   END=`expr ${COUNT} - 1`
-  for i in $(seq 0 "${END}"); do 
+  for i in $(seq 0 "${END}"); do
     influxd-ctl add-data  "datanode-vm${i}:8088"
-  done         
+  done
 }
 
 configure_metanodes()
@@ -286,7 +285,7 @@ log "[apt-get] updated apt-get"
 #------------------------
 log "[autopart] running auto partitioning & mounting"
 
-#bash autopart.sh
+bash autopart.sh
 
 
 if [ "${METANODE}" == 1 ]; then
