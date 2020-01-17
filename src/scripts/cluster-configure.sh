@@ -220,14 +220,13 @@ configure_datanodes()
 }
 datanode_count()
 {
-    #checking to see if ${COUNT} parameter is set 
+    #checking to see if the $COUNT parameter is set 
   log "[datanode_count] checking COUNT parameter"
 
   if [ -z "${COUNT}" ]; then
-    log "err: Please set \$_COUNT"
+    log "err: please set \$_COUNT parameter"
 
-    help
-    exit 2
+    exit 1
   fi
 }
 
