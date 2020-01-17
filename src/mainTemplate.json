@@ -205,7 +205,7 @@
               "[concat(parameters('_artifactsLocation'), '/scripts/autopart.sh')]",
               "[concat(parameters('_artifactsLocation'), '/scripts/cluster-configure.sh')]"
                     ],
-                "commandToExecute": "bash cluster-configure.sh -j 1"
+                "commandToExecute": "[concat('bash cluster-configure.sh -m 1 -j 1', variables('commonInstallParams'))]"
           }
         },
         "chronograf": {
