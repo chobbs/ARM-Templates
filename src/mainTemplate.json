@@ -320,7 +320,7 @@
     "dataTemplateUrl": "[uri(parameters('_artifactsLocation'), concat('machines/datanodes-resources.json', parameters('_artifactsLocationSasToken')))]"
   },
   "resources": [
-        {
+    {
       "name": "[parameters('influxTags').tracking]",
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2019-08-01",
