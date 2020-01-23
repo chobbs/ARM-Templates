@@ -9,6 +9,13 @@
         "description": "The base URI where artifacts required by this template are located, including a trailing '/'"
       }
     },
+    "_artifactsLocationSasToken": {
+      "type": "securestring",
+      "defaultValue": "",
+      "metadata": {
+        "description": "The sasToken required to access _artifactsLocation. When the template is deployed using the accompanying scripts, a sasToken will be automatically generated. Use the defaultValue if the staging location is not secured."
+      }
+    },
     "loadBalancerType": { 
       "type": "string",
       "defaultValue": "internal",
@@ -141,25 +148,19 @@
     }
   },
   "variables": {
-    "sharedTemplateUrl": "[uri(parameters('_artifactsLocation'), 'partials/shared-resources.json')]",
-    "metaTemplateUrl": "[uri(parameters('_artifactsLocation'), 'machines/metanodes-resources.json')]",
+    "sharedTemplateUrl": "[uri(parameters('_artifactsLocation'), concat('partials/shared-resources.json', parameters('_artifactsLocationSasToken')))]",
+    "metaTemplateUrl": "[uri(parameters('_artifactsLocation'), concat('machines/metanodes-resources.json', parameters('_artifactsLocationSasToken')))]",
     "jumpboxTemplates": {
       "No": "empty/empty-resources.json",
       "Yes": "machines/jumpbox-resources.json"
     },
-    "jumpboxTemplateUrl": "[uri(parameters('_artifactsLocation'), variables('jumpboxTemplates')[parameters('jumpbox')])]",
+    "jumpboxTemplateUrl": "[uri(parameters('_artifactsLocation'), concat(variables('jumpboxTemplates')[parameters('jumpbox')], parameters('_artifactsLocationSasToken')))]",
     "chronografTemplates": {
       "No": "empty/empty-resources.json",
       "Yes": "machines/chronograf-resources.json"
     },
-    "chronografTemplateUrl": "[uri(parameters('_artifactsLocation'), variables('chronografTemplates')[parameters('chronograf')])]",
+    "chronografTemplateUrl": "[uri(parameters('_artifactsLocation'), concat(variables('chronografTemplates')[parameters('chronograf')], parameters('_artifactsLocationSasToken')))]",
     "commonInstallParams": "[concat(' -c ', parameters('vmDataNodeCount'))]",
-
-    "ubuntuScripts": [
-      "[concat(parameters('_artifactsLocation'), 'scripts/cluster-configure.sh')]",
-      "[concat(parameters('_artifactsLocation'), 'scripts/chronograf-install.sh')]",
-      "[concat(parameters('_artifactsLocation'), 'scripts/autopart.sh')]"
-    ],
     "ubuntuSettings": {
       "imageReference": {
         "publisher": "Canonical",
@@ -176,8 +177,8 @@
           "autoUpgradeMinorVersion": true,
           "settings": {
             "fileUris": [
-              "[concat(parameters('_artifactsLocation'), '/scripts/cluster-configure.sh')]", 
-              "[concat(parameters('_artifactsLocation'), 'scripts/autopart.sh')]"
+              "[uri(parameters('_artifactsLocation'), concat('/scripts/cluster-configure.sh', parameters('_artifactsLocationSasToken')))]", 
+              "[uri(parameters('_artifactsLocation'), concat('scripts/autopart.sh', parameters('_artifactsLocationSasToken')))]"
                     ],
                 "commandToExecute": "bash cluster-configure.sh -m 1"
           }
@@ -316,7 +317,7 @@
       "accountType": "[variables('dataSkuSettings')[parameters('vmSizeDataNodes')].storageAccountType]",
       "diskSize": "[variables('dataDiskSizes')[parameters('vmDataDiskSize')]]"
     },
-    "dataTemplateUrl": "[uri(parameters('_artifactsLocation'), 'machines/datanodes-resources.json')]"
+    "dataTemplateUrl": "[uri(parameters('_artifactsLocation'), concat('machines/datanodes-resources.json', parameters('_artifactsLocationSasToken')))]"
   },
   "resources": [
     {
