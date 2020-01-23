@@ -184,14 +184,14 @@
           }
         },
         "data": {
-          "publisher": "Microsoft.Compute",
-          "type": "CustomScriptExtension",
-          "typeHandlerVersion": "1.8",
+          "publisher": "Microsoft.Azure.Extensions",
+          "type": "CustomScript",
+          "typeHandlerVersion": "2.0",
           "autoUpgradeMinorVersion": true,
           "settings": {
             "fileUris": [
-              "[uri(parameters('_artifactsLocation'), concat('/scripts/autopart.sh' , parameters('_artifactsLocationSasToken')))]",
-              "[uri(parameters('_artifactsLocation'), concat('/scripts/cluster-configure.sh', parameters('_artifactsLocationSasToken')))]"
+              "[concat(parameters('_artifactsLocation'), '/scripts/autopart.sh' , parameters('_artifactsLocationSasToken'))]",
+              "[concat(parameters('_artifactsLocation'), '/scripts/cluster-configure.sh', parameters('_artifactsLocationSasToken'))]"
                     ],
                 "commandToExecute": "[concat('bash cluster-configure.sh -d 1', variables('commonInstallParams'))]"
           }
