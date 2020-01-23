@@ -503,7 +503,7 @@
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2019-08-01",
       "dependsOn": [
-        "[concat('Microsoft.Resources/deployments/', 'datanodes')]"
+        "[concat('Microsoft.Resources/deployments/', 'shared')]"
       ],
       "properties": {
         "mode": "Incremental",
