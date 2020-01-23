@@ -184,9 +184,9 @@
           }
         },
         "data": {
-          "publisher": "Microsoft.Azure.Extensions",
-          "type": "CustomScript",
-          "typeHandlerVersion": "2.0",
+          "publisher": "Microsoft.Compute",
+          "type": "CustomScriptExtension",
+          "typeHandlerVersion": "1.8",
           "autoUpgradeMinorVersion": true,
           "settings": {
             "fileUris": [
@@ -323,7 +323,7 @@
     {
       "name": "metanodes",
       "type": "Microsoft.Resources/deployments",
-      "apiVersion": "2019-05-01",
+      "apiVersion": "2019-08-01",
       "dependsOn": [
         "[concat('Microsoft.Resources/deployments/', 'shared')]",
         "[concat('Microsoft.Resources/deployments/', 'datanodes')]"
@@ -371,7 +371,7 @@
     {
       "name": "shared",
       "type": "Microsoft.Resources/deployments",
-      "apiVersion": "2019-05-01",
+      "apiVersion": "2019-08-01",
       "properties": {
         "mode": "Incremental",
         "templateLink": {
@@ -397,7 +397,7 @@
     {
       "name": "datanodes",
       "type": "Microsoft.Resources/deployments",
-      "apiVersion": "2019-05-01",
+      "apiVersion": "2019-08-01",
       "dependsOn": [
         "[concat('Microsoft.Resources/deployments/', 'shared')]"
       ],
@@ -453,7 +453,7 @@
     {
       "name": "jumpbox",
       "type": "Microsoft.Resources/deployments",
-      "apiVersion": "2019-05-01",
+      "apiVersion": "2019-08-01",
       "dependsOn": [
         "[concat('Microsoft.Resources/deployments/', 'shared')]"
       ],
@@ -488,7 +488,7 @@
      {
       "name": "chronograf",
       "type": "Microsoft.Resources/deployments",
-      "apiVersion": "2019-05-01",
+      "apiVersion": "2019-08-01",
       "dependsOn": [
         "[concat('Microsoft.Resources/deployments/', 'datanodes')]"
       ],
