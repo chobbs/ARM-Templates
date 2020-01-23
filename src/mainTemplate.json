@@ -320,6 +320,19 @@
     "dataTemplateUrl": "[uri(parameters('_artifactsLocation'), concat('machines/datanodes-resources.json', parameters('_artifactsLocationSasToken')))]"
   },
   "resources": [
+        {
+      "name": "[parameters('influxTags').tracking]",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2019-08-01",
+      "properties": {
+        "mode": "Incremental",
+        "template": {
+          "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+          "contentVersion": "1.0.0.0",
+          "resources": []
+        }
+      }
+    },
     {
       "name": "metanodes",
       "type": "Microsoft.Resources/deployments",

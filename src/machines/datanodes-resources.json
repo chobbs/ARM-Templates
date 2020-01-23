@@ -20,6 +20,7 @@
         "description": "Admin password used when provisioning virtual machines"
       }
     },
+
     "storageSettings": {
       "type": "object",
       "metadata": {
@@ -35,7 +36,7 @@
     "influxTags": {
       "type": "object",
       "defaultValue": {
-        "provider": "69981ba4-3c3e-4de2-a094-abeb387e0d0b"
+        "provider": "influxdata"
       },
       "metadata": {
         "description": "Unique identifiers to allow the Azure Infrastructure to understand the origin of resources deployed to Azure. You do not need to supply a value for this."
