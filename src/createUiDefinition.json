@@ -477,7 +477,6 @@
     "outputs": {
       "loadBalancerType": "[steps('externalAccessStep').externalAccessSection.loadBalancerType]",
       "chronograf": "[steps('externalAccessStep').chronografSection.chronograf]",
-      "jumpbox": "[steps('externalAccessStep').externalAccessSection.jumpbox]",
       "vmSizeDataNodes": "[steps('nodesStep').dataNodes.vmSizeDataNodes]",
       "vmDataDiskSize": "[steps('nodesStep').dataNodesDisks.vmDataDiskSize]",
       "vmDataNodeCount": "[steps('nodesStep').dataNodes.vmDataNodeCount]",
