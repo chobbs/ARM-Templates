@@ -33,10 +33,10 @@ fi
 # accept the legal terms for the influxdata offer skus (only needs ti be run once for your sunscritopn ID)
 
 echo -e "\nRuning Azure commands to accepting 'Legal Terms' for InfliuxData offer data-node sku\n" 
-az vm image terms accept --urn influxdata:influxdb-enterprise-vm:influxdb-enterprise-data-byol:1.7.90
+az vm image terms accept --urn influxdata:influxdb-enterprise-vm:data:1.7.90
 
 echo -e "\nRuning Azure commands to accepting 'Legal Terms' for InfliuxData offer meta-node sku\n" 
-az vm image terms accept --urn influxdata:influxdb-enterprise-vm:influxdb-enterprise-meta-byol:1.7.90
+az vm image terms accept --urn influxdata:influxdb-enterprise-vm:meta:1.7.90
 
 az group deployment create \
 --template-file src/mainTemplate.json \
