@@ -151,8 +151,8 @@
     "sharedTemplateUrl": "[uri(parameters('_artifactsLocation'), concat('partials/shared-resources.json', parameters('_artifactsLocationSasToken')))]",
     "metaTemplateUrl": "[uri(parameters('_artifactsLocation'), concat('machines/metanodes-resources.json', parameters('_artifactsLocationSasToken')))]",
     "jumpboxTemplates": {
-      "No": "machines/jumpbox-resources.json",
-      "Yes": "machines/jumpbox-resources.json"
+      "No": "empty/empty-resources.json",
+      "Yes": "empty/empty-resources.json"
     },
     "jumpboxTemplateUrl": "[uri(parameters('_artifactsLocation'), concat(variables('jumpboxTemplates')[parameters('chronograf')], parameters('_artifactsLocationSasToken')))]",
     "chronografTemplates": {
