@@ -210,7 +210,7 @@ configure_datanodes()
     #sed -i "s/\(license-key *= *\).*/\1\"$TEMP_LICENSE\"/" "${DATA_CONFIG_FILE}"
     sed -i "s/\(auth-enabled *= *\).*/\1false/" "${DATA_CONFIG_FILE}"
     sed -i "s/\(marketplace-env *= *\).*/\1\"azure\"/" "${DATA_CONFIG_FILE}"
-    #sed -i '/\(license-path *= *\).*/a \  marketplace-env ="azure"' "${DATA_CONFIG_FILE}"
+    #sed -i '/\(license-path *= *\).*/a \  marketplace-env ="azure"' "${META_CONFIG_FILE}"
 
 
     #create working dirs and file for datanode service
@@ -244,9 +244,11 @@ start_systemd()
   if [ "${METANODE}" == 1 ]; then
     log "[start_systemd] starting metanode"
     systemctl start influxdb-meta
+    sleep 5
   elif [ "${DATANODE}" == 1 ]; then
     log "[start_systemd] starting datanode"
     systemctl start influxdb
+    sleep 5
   fi
 }
 
@@ -258,7 +260,7 @@ process_check()
   PROC_CHECK=`ps aux | grep -v grep | grep influxdb`
   EXIT_CODE=$?
   if [[ $EXIT_CODE -ne 0 ]]; then
-    log "err: could not start influxd service, please start manually."
+    log "err: could not start influxdb service, try starting manually."
     exit $EXIT_CODE
   fi
 }
