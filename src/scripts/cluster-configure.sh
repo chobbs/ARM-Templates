@@ -206,8 +206,10 @@ configure_datanodes()
 
     chown influxdb:influxdb "${DATA_CONFIG_FILE}"
     sed -i "s/\(hostname *= *\).*/\1\"$HOSTNAME\"/" "${DATA_CONFIG_FILE}"
-    sed -i "s/\(license-key *= *\).*/\1\"$TEMP_LICENSE\"/" "${DATA_CONFIG_FILE}"
+    #sed -i "s/\(license-key *= *\).*/\1\"$TEMP_LICENSE\"/" "${DATA_CONFIG_FILE}"
     sed -i "s/\(auth-enabled *= *\).*/\1false/" "${DATA_CONFIG_FILE}"
+    sed -i '/\(license-path *= *\).*/a \  marketplace-env ="azure"' "${META_CONFIG_FILE}"
+
 
     #create working dirs and file for datanode service
     log "[mkdir_cmd] creating datanode directory structure"
