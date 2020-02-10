@@ -170,7 +170,8 @@ configure_metanodes()
     sed -i "s/\(hostname *= *\).*/\1\"$HOSTNAME\"/" "${META_CONFIG_FILE}"
     #sed -i "s/\(license-key *= *\).*/\1\"$TEMP_LICENSE\"/" "${META_CONFIG_FILE}"
     sed -i "s/\(dir *= *\).*/\1\"\/influxdb\/meta\"/" "${META_CONFIG_FILE}"
-    sed -i '/\(license-path *= *\).*/a \  marketplace-env ="azure"' "${META_CONFIG_FILE}"
+    sed -i "s/\(marketplace-env *= *\).*/\1\"azure\"/" "${META_CONFIG_FILE}"
+    #sed -i '/\(license-path *= *\).*/a \  marketplace-env ="azure"' "${META_CONFIG_FILE}"
 
 
 
@@ -197,7 +198,7 @@ configure_datanodes()
     cp -p  "${DATA_GEN_FILE}" "${DATA_CONFIG_FILE}"
     EXIT_CODE=$?
     if [[ $EXIT_CODE -ne 0 ]]; then
-       log "err: could not copy new "${DATA_GEN_FILE}" file to file to /etc/influxdb"
+       log "err: could not copy new "${DATA_GEN_FILE}" file to /etc/influxdb"
       exit $EXIT_CODE
     fi
 
@@ -208,7 +209,8 @@ configure_datanodes()
     sed -i "s/\(hostname *= *\).*/\1\"$HOSTNAME\"/" "${DATA_CONFIG_FILE}"
     #sed -i "s/\(license-key *= *\).*/\1\"$TEMP_LICENSE\"/" "${DATA_CONFIG_FILE}"
     sed -i "s/\(auth-enabled *= *\).*/\1false/" "${DATA_CONFIG_FILE}"
-    sed -i '/\(license-path *= *\).*/a \  marketplace-env ="azure"' "${META_CONFIG_FILE}"
+    sed -i "s/\(marketplace-env *= *\).*/\1\"azure\"/" "${DATA_CONFIG_FILE}"
+    #sed -i '/\(license-path *= *\).*/a \  marketplace-env ="azure"' "${DATA_CONFIG_FILE}"
 
 
     #create working dirs and file for datanode service
@@ -256,7 +258,7 @@ process_check()
   PROC_CHECK=`ps aux | grep -v grep | grep influxdb`
   EXIT_CODE=$?
   if [[ $EXIT_CODE -ne 0 ]]; then
-    log "err: could not copy new "${DATA_GEN_FILE}" file to file to /etc/influxdb"
+    log "err: could not start influxd service, please start manually."
     exit $EXIT_CODE
   fi
 }
