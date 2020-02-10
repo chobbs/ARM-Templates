@@ -53,7 +53,7 @@ META_GEN_FILE="/etc/influxdb/influxdb-meta-generated.conf"
 DATA_GEN_FILE="/etc/influxdb/influxdb-generated.conf"
 META_CONFIG_FILE="/etc/influxdb/influxdb-meta.conf"
 DATA_CONFIG_FILE="/etc/influxdb/influxdb.conf"
-TEMP_LICENSE="d2951f76-a329-4bd9-b9bc-12984b897031"
+#TEMP_LICENSE="d2951f76-a329-4bd9-b9bc-12984b897031"
 ETC_HOSTS="/etc/hosts"
 
 
@@ -168,8 +168,10 @@ configure_metanodes()
 
     chown influxdb:influxdb "${META_CONFIG_FILE}"
     sed -i "s/\(hostname *= *\).*/\1\"$HOSTNAME\"/" "${META_CONFIG_FILE}"
-    sed -i "s/\(license-key *= *\).*/\1\"$TEMP_LICENSE\"/" "${META_CONFIG_FILE}"
+    #sed -i "s/\(license-key *= *\).*/\1\"$TEMP_LICENSE\"/" "${META_CONFIG_FILE}"
     sed -i "s/\(dir *= *\).*/\1\"\/influxdb\/meta\"/" "${META_CONFIG_FILE}"
+    sed -i '/\(license-path *= *\).*/a \  marketplace-env ="azure"' "${META_CONFIG_FILE}"
+
 
 
     #create working dir for meatanode service
