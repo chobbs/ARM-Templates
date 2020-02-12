@@ -151,7 +151,7 @@
       "Yes": "machines/chronograf-resources.json"
     },
     "chronografTemplateUrl": "[uri(parameters('_artifactsLocation'), concat(variables('chronografTemplates')[parameters('chronograf')], parameters('_artifactsLocationSasToken')))]",
-    "commonInstallParams": "[concat(' -c ', parameters('vmDataNodeCount'))]",
+    "commonInstallParams": "[concat(' -c ', parameters('vmDataNodeCount'),' -a ', parameters('influxdbPassword'))]",
     "ubuntuSettings": {
       "imageReference": {
         "publisher": "Canonical",
@@ -197,7 +197,7 @@
               "[concat(parameters('_artifactsLocation'), '/scripts/autopart.sh', parameters('_artifactsLocationSasToken'))]",
               "[concat(parameters('_artifactsLocation'), '/scripts/cluster-configure.sh', parameters('_artifactsLocationSasToken'))]"
                     ],
-                "commandToExecute": "[concat('bash cluster-configure.sh -m 1 -j 1 -a 1', variables('commonInstallParams'))]"
+                "commandToExecute": "[concat('bash cluster-configure.sh -m 1 -j 1', variables('commonInstallParams'))]"
           }
         },
         "chronograf": {

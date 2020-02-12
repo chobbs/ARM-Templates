@@ -255,13 +255,14 @@ start_systemd()
 
 create_user()
 {
+#check service status
+log "[create_user] create influxdb admin user"
 
-log "new influxdb password: ${INFLUXDB_PWD}"
+payload="q=CREATE USER admin WITH PASSWORD '${INFLUXDB_PWD}' WITH ALL PRIVILEGES"
 
-#payload="q=CREATE  admin WITH PASSWORD '${INFLUXDB_PWD}' WITH ALL PRIVILEGES"    
-#curl -s -k -X POST \
-#    -d "${payload}" \
-#    "http://datanode-vm0:8086/query"
+curl -s -k -X POST \
+    -d "${payload}" \
+    "http://datanode-vm0:8086/query"
     
 }
 process_check()
@@ -311,16 +312,13 @@ if [ "${METANODE}" == 1 ]; then
     log "[metanode_funcs] executing metanode configuration functions"
 
     setup_metanodes
-
     configure_metanodes
 
 elif [ "${DATANODE}" == 1 ]; then
     log "[datanode_funcs] executing datanode configuration functions"
     
     datanode_count
-
     setup_datanodes
-
     configure_datanodes
 else 
 
@@ -333,7 +331,6 @@ fi
 #start service & check process
 #------------------------
 start_systemd
-
 process_check
 
 
