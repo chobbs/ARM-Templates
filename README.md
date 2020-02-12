@@ -27,11 +27,11 @@ The output from the market place UI is fed directly to the ARM template. You can
     </td></tr>
 
   <tr><td>vmSizeDataNodes</td><td>string</td>
-    <td>Azure VM size of the data nodes see <a href="https://github.com/chobbs/ARM-Templates/blob/master/src/mainTemplate.json#L69">this list for supported sizes</a>
+    <td>Azure VM size of the data nodes see <a href="https://github.com/influxdata/azure-resource-manager-influxdb-enterprise/blob/master/src/mainTemplate.json#L69">this list for supported sizes</a>
     </td></tr>
 
   <tr><td>vmDataNodeCount</td><td>int</td>
-    <td>The number of data nodes you wish to deploy. Should be greater than 0.
+    <td>The number of data nodes you wish to deploy. (Min: 2 | Max: 6).
     </td></tr>
 
   <tr><td>vmDataNodeDiskSize</td><td>string</td>
@@ -45,7 +45,12 @@ The output from the market place UI is fed directly to the ARM template. You can
     </td></tr>
 
   <tr><td>password</td><td>object</td>
-    <td>Password is a complex object parameter, we support both authenticating through username/pass or ssh keys. See the <a href="https://github.com/Mpdreamz/ARM-Templates/tree/master/parameters"> parameters example folder</a> for an example of what to pass for either option.
+    <td>Password is a complex object parameter, we support both authenticating through username/pass or ssh keys. See the <a href="https://github.com/influxdata/azure-resource-manager-influxdb-enterprise/tree/master/parameters"> parameters example folder</a> for an example of what to pass for either option.
+    </td></tr>
+
+
+    <tr><td>shieldAdminPassword</td><td>securestring</td>
+    <td>Shield password for the <code>es_admin</code> user with admin role, must be &gt; 6 characters
     </td></tr>
 
   <tr><td>location</td><td>string</td>
