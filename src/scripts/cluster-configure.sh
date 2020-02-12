@@ -58,7 +58,7 @@ ETC_HOSTS="/etc/hosts"
 
 
 #Loop through options passed
-while getopts :m:d:c:j:h:A optname; do
+while getopts :m:d:c:j:a:h optname; do
   log "Option $optname set"
   case $optname in
     m)  #configure metanodes
@@ -73,7 +73,7 @@ while getopts :m:d:c:j:h:A optname; do
     j) #join cluster
       JOIN="${OPTARG}"
       ;;
-    A) #influxdb admin password
+    a) #influxdb admin password
       INFLUXDB_PWD="${OPTARG}"
       ;;
     h) #show help
