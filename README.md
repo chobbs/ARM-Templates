@@ -48,14 +48,13 @@ The output from the market place UI is fed directly to the ARM template. You can
     <td>Password is a complex object parameter, we support both authenticating through username/pass or ssh keys. See the <a href="https://github.com/influxdata/azure-resource-manager-influxdb-enterprise/tree/master/parameters"> parameters example folder</a> for an example of what to pass for either option.
     </td></tr>
 
-
-    <tr><td>shieldAdminPassword</td><td>securestring</td>
-    <td>Shield password for the <code>es_admin</code> user with admin role, must be &gt; 6 characters
+  <tr><td>influxdbPassword</td><td>securestring</td>
+    <td>InfluxDB password for the <code>admin</code> user with all privs, must be &gt; 6 characters 
     </td></tr>
 
   <tr><td>location</td><td>string</td>
     <td>The location where to provision all the items in this template. Defaults to the special <code>ResourceGroup</code> value which means it will inherit the location
-    from the resource group see <a href="https://github.com/Mpdreamz/ARM-Templates/blob/master/src/mainTemplate.json#L197">this list for supported locations</a>.
+    from the resource group see <a href="https://github.com/influxdata/azure-resource-manager-influxdb-enterprise/blob/master/src/mainTemplate.json#L197">this list for supported locations</a>.
     </td></tr>
 
 </table>
