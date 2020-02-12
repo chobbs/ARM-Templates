@@ -13,9 +13,8 @@ help()
     echo " "
     echo "This script configures a new InfluxEnterpise cluster deployed with Azure ARM templates."
     echo "Parameters:"
-    echo "-m  Metanode configuration"
-    echo "-d  Datanode configuration [requires -c parameter]"
-    echo "-j  Join cluster nodes [requires -m:-c parameters]"
+    echo "-n  Configure specific node_type [ meta | data | master ]"
+    echo "-a  Supply influxdb admin password  cluster nodes [requires -n master option]"
     echo "-c  Number of datanodes to configure"
     echo "-h  view this help content"
 }
@@ -58,20 +57,14 @@ ETC_HOSTS="/etc/hosts"
 
 
 #Loop through options passed
-while getopts :m:d:c:j:a:h optname; do
+while getopts :n:c:a:h optname; do
   log "Option $optname set"
   case $optname in
-    m)  #configure metanodes
-      METANODE="${OPTARG}"
-      ;;
-    d) #configure datanodes 
-      DATANODE="${OPTARG}"
+    n)  #configure meta/data/master nodes
+      NODE_TYPE="${OPTARG}"
       ;;
     c) #number os datanodes (need for datanode configure and cluster join)
       COUNT="${OPTARG}"
-      ;;
-    j) #join cluster
-      JOIN="${OPTARG}"
       ;;
     a) #influxdb admin password
       INFLUXDB_PWD="${OPTARG}"
@@ -242,11 +235,11 @@ datanode_count()
 
 start_systemd()
 {
-  if [ "${METANODE}" == 1 ]; then
+  if [ "${NODE_TYPE}" == "meta" || "${NODE_TYPE}" == "master" ]; then
     log "[start_systemd] starting metanode"
     systemctl start influxdb-meta
     sleep 5
-  elif [ "${DATANODE}" == 1 ]; then
+  elif [ "${NODE_TYPE}" == "data" ]; then
     log "[start_systemd] starting datanode"
     systemctl start influxdb
     sleep 5
@@ -308,13 +301,13 @@ log "[autopart] running auto partitioning & mounting"
 bash autopart.sh
 
 
-if [ "${METANODE}" == 1 ]; then
+if [ "${NODE_TYPE}" == "meta" || "${NODE_TYPE}" == "master" ]; then
     log "[metanode_funcs] executing metanode configuration functions"
 
     setup_metanodes
     configure_metanodes
 
-elif [ "${DATANODE}" == 1 ]; then
+elif [ "${NODE_TYPE}" == "data" ]; then
     log "[datanode_funcs] executing datanode configuration functions"
     
     datanode_count
@@ -336,8 +329,8 @@ process_check
 
 #master metanode funcs to join all nodes to cluster 
 #------------------------
-if [ "${JOIN}" == 1 ];then
-  log "[join_funcs] executing cluster join commands on master metanode"
+if [ "${NODE_TYPE}" == "master" ];then
+  log "[master_metanode] executing cluster join commands on master metanode"
 
   datanode_count
   join_metanodes
