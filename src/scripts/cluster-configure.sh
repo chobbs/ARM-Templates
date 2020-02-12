@@ -235,11 +235,11 @@ datanode_count()
 
 start_systemd()
 {
-  if [ "${NODE_TYPE}" == "meta" || "${NODE_TYPE}" == "master" ]; then
+  if [[ ${NODE_TYPE} == "meta" ]] || [[ ${NODE_TYPE} == "master" ]]; then
     log "[start_systemd] starting metanode"
     systemctl start influxdb-meta
     sleep 5
-  elif [ "${NODE_TYPE}" == "data" ]; then
+  elif [[ ${NODE_TYPE} == "data" ]]; then
     log "[start_systemd] starting datanode"
     systemctl start influxdb
     sleep 5
@@ -301,23 +301,23 @@ log "[autopart] running auto partitioning & mounting"
 bash autopart.sh
 
 
-if [ "${NODE_TYPE}" == "meta" || "${NODE_TYPE}" == "master" ]; then
+if [[ ${NODE_TYPE} == "meta" ]] || [[ ${NODE_TYPE} == "master" ]]; then
     log "[metanode_funcs] executing metanode configuration functions"
 
     setup_metanodes
     configure_metanodes
 
-elif [ "${NODE_TYPE}" == "data" ]; then
+elif [[ ${NODE_TYPE} == "data" ]]; then
     log "[datanode_funcs] executing datanode configuration functions"
     
     datanode_count
     setup_datanodes
     configure_datanodes
 else 
+    log "err: node_type unknown, please set a valid node_type"
 
-  help
-
-  exit 2
+    help
+    exit 2
 fi
 
 
@@ -329,7 +329,7 @@ process_check
 
 #master metanode funcs to join all nodes to cluster 
 #------------------------
-if [ "${NODE_TYPE}" == "master" ];then
+if [[ ${NODE_TYPE} == "master" ]];then
   log "[master_metanode] executing cluster join commands on master metanode"
 
   datanode_count
