@@ -108,6 +108,13 @@
         "description": ""
       }
     },
+    "influxdbPassword": {
+      "type": "securestring",
+      "defaultValue": "changeME",
+      "metadata": {
+        "description": "Database password for admin user with ALL PRIVILEGES"
+      }
+    },
     "location": {
       "type": "string",
       "allowedValues": [
@@ -144,7 +151,7 @@
       "Yes": "machines/chronograf-resources.json"
     },
     "chronografTemplateUrl": "[uri(parameters('_artifactsLocation'), concat(variables('chronografTemplates')[parameters('chronograf')], parameters('_artifactsLocationSasToken')))]",
-    "commonInstallParams": "[concat(' -c ', parameters('vmDataNodeCount'))]",
+    "commonInstallParams": "[concat(' -c ', parameters('vmDataNodeCount'),' -A', parameters('influxdbPassword'))]",
     "ubuntuSettings": {
       "imageReference": {
         "publisher": "Canonical",

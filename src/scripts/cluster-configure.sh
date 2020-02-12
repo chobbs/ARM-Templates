@@ -53,12 +53,12 @@ META_GEN_FILE="/etc/influxdb/influxdb-meta-generated.conf"
 DATA_GEN_FILE="/etc/influxdb/influxdb-generated.conf"
 META_CONFIG_FILE="/etc/influxdb/influxdb-meta.conf"
 DATA_CONFIG_FILE="/etc/influxdb/influxdb.conf"
-#TEMP_LICENSE="d2951f76-a329-4bd9-b9bc-12984b897031"
+TEMP_LICENSE="d2951f76-a329-4bd9-b9bc-12984b897031"
 ETC_HOSTS="/etc/hosts"
 
 
 #Loop through options passed
-while getopts :m:d:c:j:h optname; do
+while getopts :m:d:c:j:h:A optname; do
   log "Option $optname set"
   case $optname in
     m)  #configure metanodes
@@ -72,6 +72,9 @@ while getopts :m:d:c:j:h optname; do
       ;;
     j) #join cluster
       JOIN="${OPTARG}"
+      ;;
+    A) #influxdb admin password
+      INFLUXDB_PWD="${OPTARG}"
       ;;
     h) #show help
       help
@@ -168,10 +171,9 @@ configure_metanodes()
 
     chown influxdb:influxdb "${META_CONFIG_FILE}"
     sed -i "s/\(hostname *= *\).*/\1\"$HOSTNAME\"/" "${META_CONFIG_FILE}"
-    #sed -i "s/\(license-key *= *\).*/\1\"$TEMP_LICENSE\"/" "${META_CONFIG_FILE}"
+    sed -i "s/\(license-key *= *\).*/\1\"$TEMP_LICENSE\"/" "${META_CONFIG_FILE}"
     sed -i "s/\(dir *= *\).*/\1\"\/influxdb\/meta\"/" "${META_CONFIG_FILE}"
-    sed -i "s/\(marketplace-env *= *\).*/\1\"azure\"/" "${META_CONFIG_FILE}"
-    #sed -i '/\(license-path *= *\).*/a \  marketplace-env ="azure"' "${META_CONFIG_FILE}"
+    #sed -i "s/\(marketplace-env *= *\).*/\1\"azure\"/" "${META_CONFIG_FILE}"
 
 
 
@@ -207,10 +209,9 @@ configure_datanodes()
 
     chown influxdb:influxdb "${DATA_CONFIG_FILE}"
     sed -i "s/\(hostname *= *\).*/\1\"$HOSTNAME\"/" "${DATA_CONFIG_FILE}"
-    #sed -i "s/\(license-key *= *\).*/\1\"$TEMP_LICENSE\"/" "${DATA_CONFIG_FILE}"
+    sed -i "s/\(license-key *= *\).*/\1\"$TEMP_LICENSE\"/" "${DATA_CONFIG_FILE}"
     sed -i "s/\(auth-enabled *= *\).*/\1false/" "${DATA_CONFIG_FILE}"
-    sed -i "s/\(marketplace-env *= *\).*/\1\"azure\"/" "${DATA_CONFIG_FILE}"
-    #sed -i '/\(license-path *= *\).*/a \  marketplace-env ="azure"' "${META_CONFIG_FILE}"
+    #sed -i "s/\(marketplace-env *= *\).*/\1\"azure\"/" "${DATA_CONFIG_FILE}"
 
 
     #create working dirs and file for datanode service
@@ -252,6 +253,17 @@ start_systemd()
   fi
 }
 
+create_user()
+{
+
+log "new influxdb password: ${INFLUXDB_PWD}"
+
+#payload="q=CREATE  admin WITH PASSWORD '${INFLUXDB_PWD}' WITH ALL PRIVILEGES"    
+#curl -s -k -X POST \
+#    -d "${payload}" \
+#    "http://datanode-vm0:8086/query"
+    
+}
 process_check()
 {
   #check service status
@@ -331,10 +343,9 @@ if [ "${JOIN}" == 1 ];then
   log "[join_funcs] executing cluster join commands on master metanode"
 
   datanode_count
-
   join_metanodes
-
   join_datanodes
+  create_user
 fi
 
 ELAPSED_TIME=$(($SECONDS - $START_TIME))
