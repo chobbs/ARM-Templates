@@ -305,13 +305,16 @@ if [[ ${NODE_TYPE} == "meta" ]] || [[ ${NODE_TYPE} == "master" ]]; then
     log "[metanode_funcs] executing metanode configuration functions"
 
     setup_metanodes
+    
     configure_metanodes
 
 elif [[ ${NODE_TYPE} == "data" ]]; then
     log "[datanode_funcs] executing datanode configuration functions"
     
     datanode_count
+
     setup_datanodes
+
     configure_datanodes
 else 
     log "err: node_type unknown, please set a valid node_type"
@@ -324,6 +327,7 @@ fi
 #start service & check process
 #------------------------
 start_systemd
+
 process_check
 
 
@@ -333,8 +337,11 @@ if [[ ${NODE_TYPE} == "master" ]];then
   log "[master_metanode] executing cluster join commands on master metanode"
 
   datanode_count
+
   join_metanodes
+
   join_datanodes
+
   create_user
 fi
 
