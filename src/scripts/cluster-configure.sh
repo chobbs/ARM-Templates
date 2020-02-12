@@ -13,9 +13,9 @@ help()
     echo " "
     echo "This script configures a new InfluxEnterpise cluster deployed with Azure ARM templates."
     echo "Parameters:"
-    echo "-n  Configure specific node_type [ meta | data | master ]"
-    echo "-a  Supply influxdb admin password  cluster nodes [requires -n master option]"
-    echo "-c  Number of datanodes to configure"
+    echo "-n  Configure specific node_type [meta || data || master]"
+    echo "-a  Supply influxdb admin password  cluster nodes - used in case of [master] node only"
+    echo "-c  Number of datanodes to configure - used in case of [data||master] node configurations"
     echo "-h  view this help content"
 }
 
@@ -60,13 +60,13 @@ ETC_HOSTS="/etc/hosts"
 while getopts :n:c:a:h optname; do
   log "Option $optname set"
   case $optname in
-    n)  #configure meta/data/master nodes
+    n)  #configure [meta||data||master] nodes
       NODE_TYPE="${OPTARG}"
       ;;
-    c) #number os datanodes (need for datanode configure and cluster join)
+    c) #number os datanodes - used in case of [data||master] nodes configurations
       COUNT="${OPTARG}"
       ;;
-    a) #influxdb admin password
+    a) #influxdb admin password - used in case of [master] node configurations only
       INFLUXDB_PWD="${OPTARG}"
       ;;
     h) #show help
@@ -305,7 +305,7 @@ if [[ ${NODE_TYPE} == "meta" ]] || [[ ${NODE_TYPE} == "master" ]]; then
     log "[metanode_funcs] executing metanode configuration functions"
 
     setup_metanodes
-    
+
     configure_metanodes
 
 elif [[ ${NODE_TYPE} == "data" ]]; then
