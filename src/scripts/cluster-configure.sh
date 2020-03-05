@@ -164,9 +164,9 @@ configure_metanodes()
 
     chown influxdb:influxdb "${META_CONFIG_FILE}"
     sed -i "s/\(hostname *= *\).*/\1\"$HOSTNAME\"/" "${META_CONFIG_FILE}"
-    sed -i "s/\(license-key *= *\).*/\1\"$TEMP_LICENSE\"/" "${META_CONFIG_FILE}"
+    #sed -i "s/\(license-key *= *\).*/\1\"$TEMP_LICENSE\"/" "${META_CONFIG_FILE}"
     sed -i "s/\(dir *= *\).*/\1\"\/influxdb\/meta\"/" "${META_CONFIG_FILE}"
-    #sed -i "s/\(marketplace-env *= *\).*/\1\"azure\"/" "${META_CONFIG_FILE}"
+    sed -i "s/\(marketplace-env *= *\).*/\1\"azure\"/" "${META_CONFIG_FILE}"
 
 
 
@@ -202,9 +202,9 @@ configure_datanodes()
 
     chown influxdb:influxdb "${DATA_CONFIG_FILE}"
     sed -i "s/\(hostname *= *\).*/\1\"$HOSTNAME\"/" "${DATA_CONFIG_FILE}"
-    sed -i "s/\(license-key *= *\).*/\1\"$TEMP_LICENSE\"/" "${DATA_CONFIG_FILE}"
+    #sed -i "s/\(license-key *= *\).*/\1\"$TEMP_LICENSE\"/" "${DATA_CONFIG_FILE}"
     sed -i "s/\(auth-enabled *= *\).*/\1false/" "${DATA_CONFIG_FILE}"
-    #sed -i "s/\(marketplace-env *= *\).*/\1\"azure\"/" "${DATA_CONFIG_FILE}"
+    sed -i "s/\(marketplace-env *= *\).*/\1\"azure\"/" "${DATA_CONFIG_FILE}"
 
 
     #create working dirs and file for datanode service
