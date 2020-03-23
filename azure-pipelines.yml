@@ -13,7 +13,7 @@ steps:
 - task: AzureResourceManagerTemplateDeployment@3
   inputs:
     deploymentScope: 'Resource Group'
-    ConnectedServiceName: 'chobbs'
+    ConnectedServiceName: 'partner-RM'
     subscriptionName: '69981ba4-3c3e-4de2-a094-abeb387e0d0b'
     action: 'Create Or Update Resource Group'
     resourceGroupName: 'AzureRmPipeline-rg'
