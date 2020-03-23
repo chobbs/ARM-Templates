@@ -19,7 +19,7 @@ steps:
     resourceGroupName: 'AzureRmPipeline-rg'
     location: 'Central US'
     templateLocation: 'Linked artifact'
-    csmFile: 'CreateAzureStorage/azuredeploy.json'
+    csmFile: 'CreateAzureStorage/mainTemplate.json'
     deploymentMode: 'Incremental'
     
 - script: echo Hello, world!
